@@ -17,6 +17,8 @@ A Pulumi provider for [Oh Dear](https://ohdear.app), built with
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
 | `provider/taggroup.go` | `ohdear:index:TagGroup` — full CRUD |
 | `provider/cmd/pulumi-resource-ohdear/main.go` | Plugin entrypoint |
+| `docs/_index.md` | Registry Overview tab |
+| `docs/installation-configuration.md` | Registry Installation & Configuration tab |
 
 ## Develop
 
