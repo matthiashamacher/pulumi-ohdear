@@ -1,0 +1,619 @@
+{
+  "name": "ohdear",
+  "displayName": "Oh Dear",
+  "version": "0.1.0",
+  "description": "A Pulumi provider for Oh Dear: manage monitors, status pages, tags, and notification destinations.",
+  "keywords": [
+    "ohdear",
+    "monitoring",
+    "uptime",
+    "status-page",
+    "category/monitoring",
+    "kind/native"
+  ],
+  "homepage": "https://ohdear.app",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/mhamacher/pulumi-ohdear",
+  "pluginDownloadURL": "github://api.github.com/mhamacher/pulumi-ohdear",
+  "publisher": "Matthias Hamacher",
+  "namespace": "mhamacher",
+  "language": {
+    "csharp": {
+      "respectSchemaVersion": true
+    },
+    "go": {
+      "generateResourceContainerTypes": true,
+      "importBasePath": "https://github.com/mhamacher/pulumi-ohdear/sdk/go/ohdear",
+      "respectSchemaVersion": true
+    },
+    "nodejs": {
+      "respectSchemaVersion": true
+    },
+    "python": {
+      "pyproject": {
+        "enabled": true
+      },
+      "respectSchemaVersion": true
+    }
+  },
+  "config": {
+    "variables": {
+      "apiToken": {
+        "type": "string",
+        "description": "Oh Dear API token, sent as a Bearer token on every request. Defaults to the OHDEAR_API_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "OHDEAR_API_TOKEN"
+          ]
+        },
+        "secret": true
+      }
+    }
+  },
+  "types": {
+    "ohdear:index:StatusPageMonitor": {
+      "properties": {
+        "clickable": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "integer"
+        }
+      },
+      "type": "object",
+      "required": [
+        "id"
+      ]
+    }
+  },
+  "provider": {
+    "properties": {
+      "apiToken": {
+        "type": "string",
+        "description": "Oh Dear API token, sent as a Bearer token on every request. Defaults to the OHDEAR_API_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "OHDEAR_API_TOKEN"
+          ]
+        },
+        "secret": true
+      }
+    },
+    "required": [
+      "apiToken"
+    ],
+    "inputProperties": {
+      "apiToken": {
+        "type": "string",
+        "description": "Oh Dear API token, sent as a Bearer token on every request. Defaults to the OHDEAR_API_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "OHDEAR_API_TOKEN"
+          ]
+        },
+        "secret": true
+      }
+    }
+  },
+  "resources": {
+    "ohdear:index:Monitor": {
+      "description": "An Oh Dear monitor (http, ping, tcp or ai).",
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "friendlyName": {
+          "type": "string"
+        },
+        "groupName": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "monitorId": {
+          "type": "integer"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "realIpAddress": {
+          "type": "string"
+        },
+        "sortUrl": {
+          "type": "string"
+        },
+        "summarizedCheckResult": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teamId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "type": {
+          "type": "string",
+          "description": "Monitor type: \"http\", \"ping\", \"tcp\" or \"ai\".",
+          "default": "http",
+          "replaceOnChanges": true
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "usesHttps": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "url",
+        "teamId",
+        "type",
+        "monitorId",
+        "label",
+        "usesHttps",
+        "sortUrl",
+        "summarizedCheckResult",
+        "createdAt",
+        "updatedAt"
+      ],
+      "inputProperties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "friendlyName": {
+          "type": "string"
+        },
+        "groupName": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "realIpAddress": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teamId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "type": {
+          "type": "string",
+          "description": "Monitor type: \"http\", \"ping\", \"tcp\" or \"ai\".",
+          "default": "http",
+          "replaceOnChanges": true
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "url",
+        "teamId"
+      ]
+    },
+    "ohdear:index:NotificationDestination": {
+      "description": "An Oh Dear notification destination for a team, monitor, tag or tag group.",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "description": "Notification channel, e.g. \"mail\", \"slack\", \"discord\", \"webhook\"."
+        },
+        "destination": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "secret": true
+        },
+        "destinationId": {
+          "type": "integer"
+        },
+        "disabledReason": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string",
+          "description": "Owner type: \"team\", \"monitor\", \"tag\" or \"tagGroup\".",
+          "replaceOnChanges": true
+        },
+        "notificationTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ownerId": {
+          "type": "integer",
+          "description": "ID of the owning team, monitor, tag or tag group.",
+          "replaceOnChanges": true
+        }
+      },
+      "required": [
+        "level",
+        "ownerId",
+        "channel",
+        "destination",
+        "enabled",
+        "destinationId",
+        "disabledReason"
+      ],
+      "inputProperties": {
+        "channel": {
+          "type": "string",
+          "description": "Notification channel, e.g. \"mail\", \"slack\", \"discord\", \"webhook\"."
+        },
+        "destination": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "secret": true
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string",
+          "description": "Owner type: \"team\", \"monitor\", \"tag\" or \"tagGroup\".",
+          "replaceOnChanges": true
+        },
+        "notificationTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ownerId": {
+          "type": "integer",
+          "description": "ID of the owning team, monitor, tag or tag group.",
+          "replaceOnChanges": true
+        }
+      },
+      "requiredInputs": [
+        "level",
+        "ownerId",
+        "channel",
+        "destination"
+      ]
+    },
+    "ohdear:index:Site": {
+      "description": "A website monitored by Oh Dear.",
+      "properties": {
+        "siteId": {
+          "type": "integer"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url",
+        "siteId"
+      ],
+      "inputProperties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "url"
+      ]
+    },
+    "ohdear:index:StatusPage": {
+      "description": "An Oh Dear status page. `monitors` is the full set of monitors shown on the page.",
+      "properties": {
+        "badgeId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "fullUrl": {
+          "type": "string"
+        },
+        "monitors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/ohdear:index:StatusPageMonitor"
+          }
+        },
+        "slug": {
+          "type": "string"
+        },
+        "statusPageId": {
+          "type": "integer"
+        },
+        "summarizedStatus": {
+          "type": "string"
+        },
+        "teamId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "replaceOnChanges": true
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "teamId",
+        "title",
+        "monitors",
+        "statusPageId",
+        "slug",
+        "domain",
+        "fullUrl",
+        "timezone",
+        "summarizedStatus",
+        "badgeId",
+        "createdAt",
+        "updatedAt"
+      ],
+      "inputProperties": {
+        "monitors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/ohdear:index:StatusPageMonitor"
+          }
+        },
+        "teamId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "title": {
+          "type": "string",
+          "replaceOnChanges": true
+        }
+      },
+      "requiredInputs": [
+        "teamId",
+        "title",
+        "monitors"
+      ]
+    },
+    "ohdear:index:StatusPageUpdateTemplate": {
+      "description": "A reusable status page update template.",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string",
+          "description": "One of \"info\", \"warning\", \"high\", \"resolved\", \"scheduled\"."
+        },
+        "teamId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "templateId": {
+          "type": "integer"
+        },
+        "text": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "teamId",
+        "templateId"
+      ],
+      "inputProperties": {
+        "name": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string",
+          "description": "One of \"info\", \"warning\", \"high\", \"resolved\", \"scheduled\"."
+        },
+        "teamId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "text": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "teamId"
+      ]
+    },
+    "ohdear:index:Tag": {
+      "description": "An Oh Dear tag. The API cannot update or delete tags: changing an input replaces the resource, and destroy only removes it from Pulumi state.",
+      "properties": {
+        "createdAt": {
+          "type": "string"
+        },
+        "monitors": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "slug": {
+          "type": "string"
+        },
+        "tagId": {
+          "type": "integer"
+        },
+        "teamId": {
+          "type": "integer"
+        },
+        "teamName": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "teamId",
+        "name",
+        "tagId",
+        "slug",
+        "teamName",
+        "sites",
+        "createdAt",
+        "updatedAt"
+      ],
+      "inputProperties": {
+        "monitors": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "teamId": {
+          "type": "integer"
+        }
+      },
+      "requiredInputs": [
+        "teamId",
+        "name"
+      ]
+    },
+    "ohdear:index:TagGroup": {
+      "description": "An Oh Dear tag group. `tags` holds tag names and supports wildcards such as `prod-*`.",
+      "properties": {
+        "createdAt": {
+          "type": "string"
+        },
+        "groupId": {
+          "type": "integer"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teamId": {
+          "type": "integer"
+        },
+        "teamName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "teamId",
+        "label",
+        "groupId",
+        "teamName",
+        "createdAt"
+      ],
+      "inputProperties": {
+        "label": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teamId": {
+          "type": "integer"
+        }
+      },
+      "requiredInputs": [
+        "teamId",
+        "label"
+      ]
+    }
+  }
+}
