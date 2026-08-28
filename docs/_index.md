@@ -18,7 +18,7 @@ authenticated with a single API token sent as a Bearer token on every request.
 {{% choosable language typescript %}}
 
 ```typescript
-import * as ohdear from "@mhamacher/ohdear";
+import * as ohdear from "@matthiashamacher/ohdear";
 
 // Monitor a website with the uptime and certificate checks.
 const site = new ohdear.Monitor("docs", {

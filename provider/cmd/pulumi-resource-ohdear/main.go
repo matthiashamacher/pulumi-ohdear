@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	provider "github.com/mhamacher/pulumi-ohdear/provider"
+	provider "github.com/matthiashamacher/pulumi-ohdear/provider"
 )
 
 func main() {

@@ -13,17 +13,17 @@
   ],
   "homepage": "https://ohdear.app",
   "license": "Apache-2.0",
-  "repository": "https://github.com/mhamacher/pulumi-ohdear",
-  "pluginDownloadURL": "github://api.github.com/mhamacher/pulumi-ohdear",
+  "repository": "https://github.com/matthiashamacher/pulumi-ohdear",
+  "pluginDownloadURL": "github://api.github.com/matthiashamacher/pulumi-ohdear",
   "publisher": "Matthias Hamacher",
-  "namespace": "mhamacher",
+  "namespace": "matthiashamacher",
   "language": {
     "csharp": {
       "respectSchemaVersion": true
     },
     "go": {
       "generateResourceContainerTypes": true,
-      "importBasePath": "https://github.com/mhamacher/pulumi-ohdear/sdk/go/ohdear",
+      "importBasePath": "https://github.com/matthiashamacher/pulumi-ohdear/sdk/go/ohdear",
       "respectSchemaVersion": true
     },
     "nodejs": {

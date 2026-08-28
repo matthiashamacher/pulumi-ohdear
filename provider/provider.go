@@ -14,15 +14,15 @@ const Name = "ohdear"
 // New builds the Oh Dear Pulumi provider.
 func New() (p.Provider, error) {
 	return infer.NewProviderBuilder().
-		WithNamespace("mhamacher").
+		WithNamespace("matthiashamacher").
 		WithDisplayName("Oh Dear").
 		WithDescription("A Pulumi provider for Oh Dear: manage monitors, status pages, tags, and notification destinations.").
 		WithKeywords("ohdear", "monitoring", "uptime", "status-page", "category/monitoring", "kind/native").
 		WithHomepage("https://ohdear.app").
-		WithRepository("https://github.com/mhamacher/pulumi-ohdear").
+		WithRepository("https://github.com/matthiashamacher/pulumi-ohdear").
 		WithPublisher("Matthias Hamacher").
 		WithLicense("Apache-2.0").
-		WithPluginDownloadURL("github://api.github.com/mhamacher/pulumi-ohdear").
+		WithPluginDownloadURL("github://api.github.com/matthiashamacher/pulumi-ohdear").
 		WithResources(
 			infer.Resource(&Site{}),
 			infer.Resource(&Monitor{}),

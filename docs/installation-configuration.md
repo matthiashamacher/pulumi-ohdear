@@ -9,7 +9,7 @@ layout: installation
 The Oh Dear provider is available for Node.js/TypeScript.
 
 ```bash
-npm install @mhamacher/ohdear
+npm install @matthiashamacher/ohdear
 ```
 
 The provider is a native (Go) plugin. Pulumi downloads it automatically from the
@@ -17,7 +17,7 @@ package's `pluginDownloadURL`; to install it by hand:
 
 ```bash
 pulumi plugin install resource ohdear <version> \
-  --server github://api.github.com/mhamacher/pulumi-ohdear
+  --server github://api.github.com/matthiashamacher/pulumi-ohdear
 ```
 
 ## Authentication

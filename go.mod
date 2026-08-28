@@ -1,4 +1,4 @@
-module github.com/mhamacher/pulumi-ohdear
+module github.com/matthiashamacher/pulumi-ohdear
 
 go 1.26
 

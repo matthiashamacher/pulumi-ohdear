@@ -1,6 +1,6 @@
 PROVIDER := pulumi-resource-ohdear
 VERSION  := $(shell (git describe --tags --match 'v*' --dirty 2>/dev/null || echo v0.1.0) | sed 's/^v//')
-LDFLAGS  := -ldflags "-X github.com/mhamacher/pulumi-ohdear/provider.Version=$(VERSION)"
+LDFLAGS  := -ldflags "-X github.com/matthiashamacher/pulumi-ohdear/provider.Version=$(VERSION)"
 
 .PHONY: build install schema sdk sdk_all dist clean
 
