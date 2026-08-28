@@ -1,7 +1,7 @@
 {
   "name": "ohdear",
   "displayName": "Oh Dear",
-  "version": "0.1.2-dirty",
+  "version": "0.1.2-2-g2e718b3-dirty",
   "description": "A Pulumi provider for Oh Dear: manage monitors, status pages, tags, and notification destinations.",
   "keywords": [
     "ohdear",

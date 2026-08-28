@@ -19,6 +19,11 @@ jobs:
       - run: go test ./...
       - run: make build
       - name: Schema is up to date
+        # `version` is derived from `git describe` and legitimately differs
+        # between a developer's checkout and CI's, so it's excluded here -
+        # only real schema drift (resources, types, config) should fail this.
         run: |
+          jq 'del(.version)' schema.json > /tmp/schema.committed.json
           make schema
-          git diff --exit-code -- schema.json
+          jq 'del(.version)' schema.json > /tmp/schema.generated.json
+          diff -u /tmp/schema.committed.json /tmp/schema.generated.json
