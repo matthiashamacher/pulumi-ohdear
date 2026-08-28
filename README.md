@@ -3,6 +3,10 @@
 A Pulumi provider for [Oh Dear](https://ohdear.app), built with
 [pulumi-go-provider](https://github.com/pulumi/pulumi-go-provider) (infer SDK).
 
+This is an independent, community-maintained project, not an official Oh Dear
+package. The Oh Dear team was kind enough to let it use their logo — with
+thanks, and the same disclaimer: this isn't built or supported by them.
+
 ## Layout
 
 | Path | Purpose |
