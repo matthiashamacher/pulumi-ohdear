@@ -11,6 +11,8 @@ A Pulumi provider for [Oh Dear](https://ohdear.app), built with
 | `provider/config.go` | Provider config — `apiToken` / `OHDEAR_API_TOKEN` |
 | `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
 | `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
+| `provider/statuspage.go` | `ohdear:index:StatusPage` — CRUD; title/team replace, monitors sync in place |
+| `provider/statuspageupdatetemplate.go` | `ohdear:index:StatusPageUpdateTemplate` — full CRUD |
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
 | `provider/taggroup.go` | `ohdear:index:TagGroup` — full CRUD |
 | `provider/cmd/pulumi-resource-ohdear/main.go` | Plugin entrypoint |
@@ -35,3 +37,6 @@ are not modelled yet. `teamId` and `type` are immutable (replace on change).
 `Tag` has no update or delete endpoint upstream, so input changes replace it and
 destroy only drops it from state. `Site` is still a stub. Resource tokens are
 mapped to the `index` module.
+
+Status page *updates* (`POST /api/status-page-updates`, the transient incident
+messages) are not modelled — only the page and the reusable templates.
