@@ -1,0 +1,37 @@
+version: 2
+project_name: pulumi-ohdear
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: provider
+    dir: provider
+    main: ./cmd/pulumi-resource-ohdear
+    binary: pulumi-resource-ohdear
+    env:
+      - CGO_ENABLED=0
+    goos: [darwin, linux, windows]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w
+      - -X github.com/mhamacher/pulumi-ohdear/provider.Version={{.Version}}
+
+archives:
+  # Name must match what the Pulumi CLI looks for when resolving a plugin:
+  # pulumi-resource-<name>-v<version>-<os>-<arch>.tar.gz
+  - id: archive
+    name_template: "{{ .Binary }}-v{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    formats: [tar.gz]
+
+snapshot:
+  version_template: "{{ .Version }}-SNAPSHOT"
+
+changelog:
+  disable: true
+
+release:
+  github:
+    owner: mhamacher
+    name: pulumi-ohdear
