@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Generates the Node.js SDK from the schema and publishes it to npm.
-  sdk:
+  sdk-nodejs:
     runs-on: ubuntu-latest
     needs: plugin
     steps:
@@ -58,3 +58,33 @@ jobs:
         working-directory: sdk/nodejs/bin
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Generates the Python SDK from the schema and publishes it to PyPI.
+  sdk-python:
+    runs-on: ubuntu-latest
+    needs: plugin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+          cache-dependency-path: go.sum
+      - uses: pulumi/setup-pulumi@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate and build the Python SDK
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          go build -ldflags "-X github.com/matthiashamacher/pulumi-ohdear/provider.Version=${VERSION}" \
+            -o bin/pulumi-resource-ohdear ./provider/cmd/pulumi-resource-ohdear
+          pulumi package gen-sdk ./bin/pulumi-resource-ohdear --language python -o sdk
+          python -m pip install build twine
+          cd sdk/python
+          python -m build
+      - name: Publish to PyPI
+        run: python -m twine upload --non-interactive dist/*
+        working-directory: sdk/python
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

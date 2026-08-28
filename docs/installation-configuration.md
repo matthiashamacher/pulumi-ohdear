@@ -6,10 +6,14 @@ layout: installation
 
 ## Installation
 
-The Oh Dear provider is available for Node.js/TypeScript.
+The Oh Dear provider is available for Node.js/TypeScript and Python.
 
 ```bash
 npm install @matthiashamacher/ohdear
+```
+
+```bash
+pip install matthiashamacher_ohdear
 ```
 
 The provider is a native (Go) plugin. Pulumi downloads it automatically from the
