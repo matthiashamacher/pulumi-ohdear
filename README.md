@@ -11,6 +11,7 @@ A Pulumi provider for [Oh Dear](https://ohdear.app), built with
 | `provider/config.go` | Provider config — `apiToken` / `OHDEAR_API_TOKEN` |
 | `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
 | `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
+| `provider/notificationdestination.go` | `ohdear:index:NotificationDestination` — full CRUD for team/monitor/tag/tagGroup levels |
 | `provider/statuspage.go` | `ohdear:index:StatusPage` — CRUD; title/team replace, monitors sync in place |
 | `provider/statuspageupdatetemplate.go` | `ohdear:index:StatusPageUpdateTemplate` — full CRUD |
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
@@ -40,3 +41,9 @@ mapped to the `index` module.
 
 Status page *updates* (`POST /api/status-page-updates`, the transient incident
 messages) are not modelled — only the page and the reusable templates.
+
+`NotificationDestination` picks its owner with `level`
+(`team`/`monitor`/`tag`/`tagGroup`) + `ownerId`, both immutable. `destination`
+is secret and kept from inputs on refresh (the API masks channel secrets); its
+values are strings. `enabled` is reconciled through the enable/disable
+endpoints, which never send a notification.
