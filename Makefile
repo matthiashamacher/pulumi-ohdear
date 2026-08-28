@@ -1,0 +1,21 @@
+PROVIDER := pulumi-resource-ohdear
+VERSION  := $(shell (git describe --tags --always --dirty 2>/dev/null || echo v0.1.0) | sed 's/^v//')
+LDFLAGS  := -ldflags "-X github.com/mhamacher/pulumi-ohdear/provider.Version=$(VERSION)"
+
+.PHONY: build install schema sdk clean
+
+build:
+	go build $(LDFLAGS) -o bin/$(PROVIDER) ./provider/cmd/$(PROVIDER)
+
+install: build
+	cp bin/$(PROVIDER) $(shell go env GOPATH)/bin/
+
+schema: build
+	pulumi package get-schema ./bin/$(PROVIDER) > schema.json
+
+sdk: build
+	rm -rf sdk
+	pulumi package gen-sdk ./bin/$(PROVIDER) --language nodejs -o sdk
+
+clean:
+	rm -rf bin sdk schema.json
