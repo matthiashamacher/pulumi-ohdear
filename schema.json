@@ -1,7 +1,7 @@
 {
   "name": "ohdear",
   "displayName": "Oh Dear",
-  "version": "0.1.0",
+  "version": "0.1.2-dirty",
   "description": "A Pulumi provider for Oh Dear: manage monitors, status pages, tags, and notification destinations.",
   "keywords": [
     "ohdear",
@@ -14,6 +14,7 @@
   "homepage": "https://ohdear.app",
   "license": "Apache-2.0",
   "repository": "https://github.com/matthiashamacher/pulumi-ohdear",
+  "logoUrl": "https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.svg",
   "pluginDownloadURL": "github://api.github.com/matthiashamacher/pulumi-ohdear",
   "publisher": "Matthias Hamacher",
   "namespace": "matthiashamacher",

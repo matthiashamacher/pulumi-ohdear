@@ -22,6 +22,7 @@ func New() (p.Provider, error) {
 		WithRepository("https://github.com/matthiashamacher/pulumi-ohdear").
 		WithPublisher("Matthias Hamacher").
 		WithLicense("Apache-2.0").
+		WithLogoURL("https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.svg").
 		WithPluginDownloadURL("github://api.github.com/matthiashamacher/pulumi-ohdear").
 		WithResources(
 			infer.Resource(&Site{}),
