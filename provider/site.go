@@ -32,7 +32,10 @@ func (Site) Create(ctx context.Context, req infer.CreateRequest[SiteArgs]) (infe
 	if req.DryRun {
 		return infer.CreateResponse[SiteState]{ID: "", Output: state}, nil
 	}
-	// ponytail: replace with POST /api/sites
+
+	cfg := infer.GetConfig[Config](ctx)
+	// ponytail: real call is POST /sites; client already carries the Bearer token.
+	_ = cfg.client
 	state.SiteID = 0
 	return infer.CreateResponse[SiteState]{ID: req.Inputs.URL, Output: state}, nil
 }
