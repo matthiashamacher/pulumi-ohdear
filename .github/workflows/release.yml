@@ -50,7 +50,7 @@ jobs:
             -o bin/pulumi-resource-ohdear ./provider/cmd/pulumi-resource-ohdear
           pulumi package gen-sdk ./bin/pulumi-resource-ohdear --language nodejs -o sdk
       - name: Publish SDKs
-        uses: pulumi/pulumi-package-publisher@v0
+        uses: pulumi/pulumi-package-publisher@v0.0.23
         with:
           sdk: nodejs
           version: ${{ github.ref_name }}

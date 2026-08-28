@@ -35,3 +35,5 @@ release:
   github:
     owner: matthiashamacher
     name: pulumi-ohdear
+  # Overwrite the release if the tag is re-cut.
+  mode: replace
