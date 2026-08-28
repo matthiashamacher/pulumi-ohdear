@@ -40,3 +40,32 @@ func TestClientDo(t *testing.T) {
 		t.Fatal("expected error on 401, got nil")
 	}
 }
+
+func TestListEnvelopeTolerance(t *testing.T) {
+	type item struct {
+		ID int `json:"id"`
+	}
+	cases := map[string]string{
+		"bare array":    `[{"id":1},{"id":2}]`,
+		"data envelope": `{"data":[{"id":1},{"id":2}],"meta":{}}`,
+	}
+	for name, payload := range cases {
+		t.Run(name, func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				_, _ = w.Write([]byte(payload))
+			}))
+			defer srv.Close()
+
+			c := NewClient("t")
+			c.baseURL = srv.URL
+
+			got, err := List[item](context.Background(), c, "/x")
+			if err != nil {
+				t.Fatalf("List: %v", err)
+			}
+			if len(got) != 2 || got[0].ID != 1 || got[1].ID != 2 {
+				t.Fatalf("got %+v, want ids [1 2]", got)
+			}
+		})
+	}
+}

@@ -61,3 +61,23 @@ func (c *Client) Do(ctx context.Context, method, path string, body, out any) err
 	}
 	return nil
 }
+
+// List GETs path and returns its items, tolerating both a bare JSON array and a
+// `{"data": [...]}` envelope (the Oh Dear API uses both across endpoints).
+func List[T any](ctx context.Context, c *Client, path string) ([]T, error) {
+	var raw json.RawMessage
+	if err := c.Do(ctx, http.MethodGet, path, nil, &raw); err != nil {
+		return nil, err
+	}
+	var list []T
+	if json.Unmarshal(raw, &list) == nil {
+		return list, nil
+	}
+	var env struct {
+		Data []T `json:"data"`
+	}
+	if err := json.Unmarshal(raw, &env); err != nil {
+		return nil, err
+	}
+	return env.Data, nil
+}

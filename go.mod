@@ -2,7 +2,10 @@ module github.com/mhamacher/pulumi-ohdear
 
 go 1.26
 
-require github.com/pulumi/pulumi-go-provider v1.6.0
+require (
+	github.com/pulumi/pulumi-go-provider v1.6.0
+	github.com/pulumi/pulumi/sdk/v3 v3.259.0
+)
 
 require (
 	github.com/BurntSushi/toml v1.6.0 // indirect
@@ -73,7 +76,6 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/pulumi/pkg/v3 v3.259.0 // indirect
-	github.com/pulumi/pulumi/sdk/v3 v3.259.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect

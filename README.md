@@ -10,6 +10,8 @@ A Pulumi provider for [Oh Dear](https://ohdear.app), built with
 | `provider/provider.go` | Provider registration (`infer.NewProviderBuilder`) |
 | `provider/config.go` | Provider config — `apiToken` / `OHDEAR_API_TOKEN` |
 | `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
+| `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
+| `provider/taggroup.go` | `ohdear:index:TagGroup` — full CRUD |
 | `provider/cmd/pulumi-resource-ohdear/main.go` | Plugin entrypoint |
 
 ## Develop
@@ -25,5 +27,6 @@ make sdk        # -> sdk/nodejs
 
 ## Status
 
-Boilerplate only. `Site` echoes its inputs and mints a placeholder ID; no Oh Dear
-API calls yet. Next: add an API client and real Create/Read/Update/Delete/Diff.
+`Tag` and `TagGroup` call the real API. `Tag` has no update or delete endpoint
+upstream, so input changes replace it and destroy only drops it from state.
+`Site` is still a stub. Resource tokens are mapped to the `index` module.
