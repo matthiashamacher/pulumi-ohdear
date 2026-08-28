@@ -4,10 +4,32 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 )
+
+// APIError is returned by Client.Do for any non-2xx response.
+type APIError struct {
+	Method     string
+	Path       string
+	StatusCode int
+	Body       string
+}
+
+func (e *APIError) Error() string {
+	return fmt.Sprintf("ohdear API %s %s: %d: %s", e.Method, e.Path, e.StatusCode, e.Body)
+}
+
+// apiStatus returns the HTTP status carried by an APIError, or 0.
+func apiStatus(err error) int {
+	var ae *APIError
+	if errors.As(err, &ae) {
+		return ae.StatusCode
+	}
+	return 0
+}
 
 const defaultBaseURL = "https://ohdear.app/api"
 
@@ -53,7 +75,7 @@ func (c *Client) Do(ctx context.Context, method, path string, body, out any) err
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		msg, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("ohdear API %s %s: %s: %s", method, path, resp.Status, bytes.TrimSpace(msg))
+		return &APIError{Method: method, Path: path, StatusCode: resp.StatusCode, Body: string(bytes.TrimSpace(msg))}
 	}
 
 	if out != nil {

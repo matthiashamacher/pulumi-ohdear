@@ -36,8 +36,15 @@ func TestClientDo(t *testing.T) {
 		t.Fatalf("out.ID = %d, want 7", out.ID)
 	}
 
-	if err := c.Do(context.Background(), http.MethodGet, "/boom", nil, nil); err == nil {
+	err := c.Do(context.Background(), http.MethodGet, "/boom", nil, nil)
+	if err == nil {
 		t.Fatal("expected error on 401, got nil")
+	}
+	if apiStatus(err) != http.StatusUnauthorized {
+		t.Fatalf("apiStatus = %d, want 401", apiStatus(err))
+	}
+	if apiStatus(context.Canceled) != 0 {
+		t.Fatal("apiStatus of a non-APIError should be 0")
 	}
 }
 

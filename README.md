@@ -10,6 +10,7 @@ A Pulumi provider for [Oh Dear](https://ohdear.app), built with
 | `provider/provider.go` | Provider registration (`infer.NewProviderBuilder`) |
 | `provider/config.go` | Provider config — `apiToken` / `OHDEAR_API_TOKEN` |
 | `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
+| `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
 | `provider/taggroup.go` | `ohdear:index:TagGroup` — full CRUD |
 | `provider/cmd/pulumi-resource-ohdear/main.go` | Plugin entrypoint |
@@ -27,6 +28,10 @@ make sdk        # -> sdk/nodejs
 
 ## Status
 
-`Tag` and `TagGroup` call the real API. `Tag` has no update or delete endpoint
-upstream, so input changes replace it and destroy only drops it from state.
-`Site` is still a stub. Resource tokens are mapped to the `index` module.
+`Monitor`, `Tag` and `TagGroup` call the real API. `Monitor` covers the monitor
+plus simple top-level fields (`checks`, `friendlyName`, `groupName`, `tags`,
+`notes`, `description`, `realIpAddress`); the per-check `*_check_settings` trees
+are not modelled yet. `teamId` and `type` are immutable (replace on change).
+`Tag` has no update or delete endpoint upstream, so input changes replace it and
+destroy only drops it from state. `Site` is still a stub. Resource tokens are
+mapped to the `index` module.

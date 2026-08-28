@@ -17,6 +17,7 @@ func New() (p.Provider, error) {
 		WithNamespace("mhamacher").
 		WithResources(
 			infer.Resource(&Site{}),
+			infer.Resource(&Monitor{}),
 			infer.Resource(&Tag{}),
 			infer.Resource(&TagGroup{}),
 		).
