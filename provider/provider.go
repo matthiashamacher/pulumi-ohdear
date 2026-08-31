@@ -23,7 +23,7 @@ func New() (p.Provider, error) {
 		WithGoImportPath("github.com/matthiashamacher/pulumi-ohdear/sdk/go/ohdear").
 		WithPublisher("Matthias Hamacher").
 		WithLicense("Apache-2.0").
-		WithLogoURL("https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.svg").
+		WithLogoURL("https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.png").
 		WithPluginDownloadURL("github://api.github.com/matthiashamacher/pulumi-ohdear").
 		WithResources(
 			infer.Resource(&Site{}),

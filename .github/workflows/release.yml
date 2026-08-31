@@ -85,24 +85,24 @@ jobs:
 
       - name: Build .NET SDK
         run: |
-          # gen-sdk saves the SVG logo as `logo.png`; NuGet only accepts a real
-          # PNG/JPG package icon, so drop the icon reference (the registry still
-          # uses the SVG via schema logoUrl). ponytail: ship a real PNG to keep it.
-          sed -i '/<PackageIcon>/d' sdk/dotnet/*.csproj
           # The csproj sets GeneratePackageOnBuild, so build drops the .nupkg
           # into bin/Debug/ where the publisher looks; `dotnet pack` double-runs
           # packaging and trips NU5026.
           dotnet build sdk/dotnet -c Debug
           tar -zcf "${GITHUB_WORKSPACE}/dotnet.tar.gz" -C sdk/dotnet .
 
-      # ponytail: Java is generated but not yet published. Bare pulumi-java-gen
-      # emits a malformed `com.matthiashamacher.` group and an empty POM
-      # name/developers block that Sonatype Central rejects; enabling Java means
-      # patching build.gradle and testing against a real staging repo. Do that as
-      # a focused follow-up, then add `java` back to the publisher's `sdk` list.
       - name: Build Java SDK
         run: |
-          sed -i 's#"com\.matthiashamacher\."#"io.github.matthiashamacher"#g' sdk/java/build.gradle
+          # pulumi-java-gen derives a malformed `com.matthiashamacher.` Maven
+          # group and leaves the POM name/developer empty, which Sonatype Central
+          # rejects. Rewrite them to our verified namespace.
+          f=sdk/java/build.gradle
+          repo=https://github.com/matthiashamacher/pulumi-ohdear
+          sed -i 's#"com\.matthiashamacher\."#"io.github.matthiashamacher"#g' "$f"
+          sed -i '/pom {/,/description =/ s/name = ""/name = "pulumi-ohdear"/' "$f"
+          sed -i '/developers {/,/^ *}/ { s/id = ""/id = "matthiashamacher"/; s/name = ""/name = "Matthias Hamacher"/ }' "$f"
+          sed -i "s#\"git@github.com/matthiashamacher/pulumi-ohdear.git\"#\"scm:git:${repo}.git\"#g" "$f"
+          grep -q 'name = "pulumi-ohdear"' "$f" && grep -q 'id = "matthiashamacher"' "$f"
           tar -zcf "${GITHUB_WORKSPACE}/java.tar.gz" -C sdk/java .
 
       - uses: actions/upload-artifact@v4
@@ -151,11 +151,17 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Resolve version
+        id: version
+        # Java's gradle build uses this verbatim as the Maven version, so strip
+        # the leading `v`.
+        run: echo "v=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
       - name: Publish SDKs
         uses: pulumi/pulumi-package-publisher@v0.0.23
         with:
-          sdk: "all,!java"
-          version: ${{ github.ref_name }}
+          sdk: "all"
+          version: ${{ steps.version.outputs.v }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -163,8 +169,8 @@ jobs:
           # An API token authenticates as the literal user __token__.
           PYPI_USERNAME: __token__
           PYPI_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-          # For when java is re-enabled: pulumi-java-gen's build.gradle reads
-          # PUBLISH_REPO_USERNAME/PASSWORD, not OSSRH_*.
+          # pulumi-java-gen's build.gradle reads PUBLISH_REPO_USERNAME/PASSWORD
+          # (Sonatype Central user token), not OSSRH_*.
           PUBLISH_REPO_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           PUBLISH_REPO_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           SIGNING_KEY: ${{ secrets.JAVA_SIGNING_KEY }}

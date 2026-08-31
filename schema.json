@@ -13,7 +13,7 @@
   "homepage": "https://ohdear.app",
   "license": "Apache-2.0",
   "repository": "https://github.com/matthiashamacher/pulumi-ohdear",
-  "logoUrl": "https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.svg",
+  "logoUrl": "https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.png",
   "pluginDownloadURL": "github://api.github.com/matthiashamacher/pulumi-ohdear",
   "publisher": "Matthias Hamacher",
   "namespace": "matthiashamacher",
