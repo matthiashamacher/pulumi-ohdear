@@ -85,7 +85,10 @@ jobs:
 
       - name: Build .NET SDK
         run: |
-          dotnet pack sdk/dotnet -c Debug -o sdk/dotnet/bin/Debug
+          # The csproj sets GeneratePackageOnBuild, so build drops the .nupkg
+          # into bin/Debug/ where the publisher looks; `dotnet pack` double-runs
+          # packaging and trips NU5026.
+          dotnet build sdk/dotnet -c Debug
           tar -zcf "${GITHUB_WORKSPACE}/dotnet.tar.gz" -C sdk/dotnet .
 
       # ponytail: Java is generated but not yet published. Bare pulumi-java-gen
