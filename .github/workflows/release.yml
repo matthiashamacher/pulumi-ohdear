@@ -93,12 +93,11 @@ jobs:
 
       - name: Build Java SDK
         run: |
-          # pulumi-java-gen derives a malformed `com.matthiashamacher.` Maven
-          # group and leaves the POM name/developer empty, which Sonatype Central
-          # rejects. Rewrite them to our verified namespace.
+          # The Maven group comes from language.java.basePackage in the schema.
+          # pulumi-java-gen still leaves the POM name/developer/scm empty or
+          # malformed, which Sonatype Central rejects - patch those here.
           f=sdk/java/build.gradle
           repo=https://github.com/matthiashamacher/pulumi-ohdear
-          sed -i 's#"com\.matthiashamacher\."#"io.github.matthiashamacher"#g' "$f"
           sed -i '/pom {/,/description =/ s/name = ""/name = "pulumi-ohdear"/' "$f"
           sed -i '/developers {/,/^ *}/ { s/id = ""/id = "matthiashamacher"/; s/name = ""/name = "Matthias Hamacher"/ }' "$f"
           sed -i "s#\"git@github.com/matthiashamacher/pulumi-ohdear.git\"#\"scm:git:${repo}.git\"#g" "$f"

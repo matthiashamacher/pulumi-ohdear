@@ -25,16 +25,19 @@
       "generateResourceContainerTypes": true,
       "respectSchemaVersion": true
     },
+    "java": {
+      "basePackage": "io.github.matthiashamacher"
+    },
     "nodejs": {
-      "respectSchemaVersion": true,
-      "packageName": "@matthiashamacher/ohdear"
+      "packageName": "@matthiashamacher/ohdear",
+      "respectSchemaVersion": true
     },
     "python": {
+      "packageName": "matthiashamacher_ohdear",
       "pyproject": {
         "enabled": true
       },
-      "respectSchemaVersion": true,
-      "packageName": "matthiashamacher_ohdear"
+      "respectSchemaVersion": true
     }
   },
   "config": {

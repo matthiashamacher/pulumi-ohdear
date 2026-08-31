@@ -36,5 +36,36 @@ func New() (p.Provider, error) {
 		).
 		WithConfig(infer.Config(&Config{})).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{"provider": "index"}).
+		// WithLanguageMap replaces the builder's defaults wholesale, so the
+		// go/csharp entries below are copied verbatim from
+		// infer.NewProviderBuilder. The additions:
+		//  - nodejs/python packageName: `gen-sdk` derives these from the
+		//    namespace, but the bare schema omits them and the registry's
+		//    publish probe needs the names we actually push.
+		//  - java basePackage: without it `gen-sdk --language java` derives a
+		//    malformed `com.matthiashamacher.` Maven group from the namespace.
+		WithLanguageMap(map[string]any{
+			"nodejs": map[string]any{
+				"respectSchemaVersion": true,
+				"packageName":          "@matthiashamacher/ohdear",
+			},
+			"go": map[string]any{
+				"generateResourceContainerTypes": true,
+				"respectSchemaVersion":           true,
+			},
+			"python": map[string]any{
+				"respectSchemaVersion": true,
+				"packageName":          "matthiashamacher_ohdear",
+				"pyproject": map[string]any{
+					"enabled": true,
+				},
+			},
+			"csharp": map[string]any{
+				"respectSchemaVersion": true,
+			},
+			"java": map[string]any{
+				"basePackage": "io.github.matthiashamacher",
+			},
+		}).
 		Build()
 }
