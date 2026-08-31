@@ -17,11 +17,7 @@ install: build
 #  - drop go.importBasePath: no Go SDK is published yet, so leave Go unadvertised
 #    rather than fail the registry's `go get` probe.
 schema: build
-	pulumi package get-schema ./bin/$(PROVIDER) | jq '\
-	  del(.version) \
-	  | .language.nodejs.packageName = "@matthiashamacher/ohdear" \
-	  | .language.python.packageName = "matthiashamacher_ohdear" \
-	  | del(.language.go.importBasePath)' > schema.json
+	pulumi package get-schema ./bin/$(PROVIDER) | jq 'del(.version) | .language.nodejs.packageName = "@matthiashamacher/ohdear" | .language.python.packageName = "matthiashamacher_ohdear" | del(.language.go.importBasePath)' > schema.json
 
 sdk: build
 	rm -rf sdk
