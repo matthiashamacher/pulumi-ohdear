@@ -20,6 +20,7 @@ func New() (p.Provider, error) {
 		WithKeywords("ohdear", "monitoring", "uptime", "status-page", "category/monitoring", "kind/native").
 		WithHomepage("https://ohdear.app").
 		WithRepository("https://github.com/matthiashamacher/pulumi-ohdear").
+		WithGoImportPath("github.com/matthiashamacher/pulumi-ohdear/sdk/go/ohdear").
 		WithPublisher("Matthias Hamacher").
 		WithLicense("Apache-2.0").
 		WithLogoURL("https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.svg").

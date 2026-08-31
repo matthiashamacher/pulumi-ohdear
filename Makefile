@@ -10,8 +10,18 @@ build:
 install: build
 	cp bin/$(PROVIDER) $(shell go env GOPATH)/bin/
 
+# Post-process the raw schema for the registry:
+#  - drop `version`: the registry takes it from the release tag and rejects a mismatch.
+#  - pin nodejs/python packageName so the registry probes the names we actually publish
+#    (`pulumi package gen-sdk` applies the namespace prefix; the bare schema doesn't).
+#  - drop go.importBasePath: no Go SDK is published yet, so leave Go unadvertised
+#    rather than fail the registry's `go get` probe.
 schema: build
-	pulumi package get-schema ./bin/$(PROVIDER) > schema.json
+	pulumi package get-schema ./bin/$(PROVIDER) | jq '\
+	  del(.version) \
+	  | .language.nodejs.packageName = "@matthiashamacher/ohdear" \
+	  | .language.python.packageName = "matthiashamacher_ohdear" \
+	  | del(.language.go.importBasePath)' > schema.json
 
 sdk: build
 	rm -rf sdk

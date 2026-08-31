@@ -1,7 +1,6 @@
 {
   "name": "ohdear",
   "displayName": "Oh Dear",
-  "version": "0.1.2-2-g2e718b3-dirty",
   "description": "A Pulumi provider for Oh Dear: manage monitors, status pages, tags, and notification destinations.",
   "keywords": [
     "ohdear",
@@ -24,17 +23,18 @@
     },
     "go": {
       "generateResourceContainerTypes": true,
-      "importBasePath": "https://github.com/matthiashamacher/pulumi-ohdear/sdk/go/ohdear",
       "respectSchemaVersion": true
     },
     "nodejs": {
-      "respectSchemaVersion": true
+      "respectSchemaVersion": true,
+      "packageName": "@matthiashamacher/ohdear"
     },
     "python": {
       "pyproject": {
         "enabled": true
       },
-      "respectSchemaVersion": true
+      "respectSchemaVersion": true,
+      "packageName": "matthiashamacher_ohdear"
     }
   },
   "config": {

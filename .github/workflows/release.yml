@@ -141,7 +141,7 @@ jobs:
           java-version: "17"
 
       - name: Publish SDKs
-        uses: pulumi/pulumi-package-publisher@v0.0.6
+        uses: pulumi/pulumi-package-publisher@v0.0.23
         with:
           sdk: "all"
           version: ${{ github.ref_name }}
