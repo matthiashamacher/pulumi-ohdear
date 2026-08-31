@@ -65,8 +65,9 @@ jobs:
 
       - name: Generate SDKs
         run: |
-          pulumi package gen-sdk ./bin/pulumi-resource-ohdear \
-            --language nodejs,python,dotnet,java -o sdk
+          for lang in nodejs python dotnet java; do
+            pulumi package gen-sdk ./bin/pulumi-resource-ohdear --language "$lang" -o sdk
+          done
 
       - name: Build Node.js SDK
         run: |
@@ -87,11 +88,14 @@ jobs:
           dotnet pack sdk/dotnet -c Debug -o sdk/dotnet/bin/Debug
           tar -zcf "${GITHUB_WORKSPACE}/dotnet.tar.gz" -C sdk/dotnet .
 
+      # ponytail: Java is generated but not yet published. Bare pulumi-java-gen
+      # emits a malformed `com.matthiashamacher.` group and an empty POM
+      # name/developers block that Sonatype Central rejects; enabling Java means
+      # patching build.gradle and testing against a real staging repo. Do that as
+      # a focused follow-up, then add `java` back to the publisher's `sdk` list.
       - name: Build Java SDK
         run: |
-          # The generated build.gradle hardcodes `group = "com.pulumi"`. Publish
-          # under a namespace we own on Sonatype Central instead.
-          sed -i 's/group = "com\.pulumi"/group = "io.github.matthiashamacher"/' sdk/java/build.gradle
+          sed -i 's#"com\.matthiashamacher\."#"io.github.matthiashamacher"#g' sdk/java/build.gradle
           tar -zcf "${GITHUB_WORKSPACE}/java.tar.gz" -C sdk/java .
 
       - uses: actions/upload-artifact@v4
@@ -143,7 +147,7 @@ jobs:
       - name: Publish SDKs
         uses: pulumi/pulumi-package-publisher@v0.0.23
         with:
-          sdk: "all"
+          sdk: "all,!java"
           version: ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -152,8 +156,9 @@ jobs:
           # An API token authenticates as the literal user __token__.
           PYPI_USERNAME: __token__
           PYPI_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          # For when java is re-enabled: pulumi-java-gen's build.gradle reads
+          # PUBLISH_REPO_USERNAME/PASSWORD, not OSSRH_*.
+          PUBLISH_REPO_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          PUBLISH_REPO_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           SIGNING_KEY: ${{ secrets.JAVA_SIGNING_KEY }}
-          SIGNING_KEY_ID: ${{ secrets.JAVA_SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.JAVA_SIGNING_PASSWORD }}

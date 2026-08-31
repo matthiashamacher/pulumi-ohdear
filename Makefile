@@ -26,7 +26,9 @@ sdk: build
 # All languages, for a full Registry listing.
 sdk_all: build
 	rm -rf sdk
-	pulumi package gen-sdk ./bin/$(PROVIDER) --language nodejs,python,dotnet,go,java -o sdk
+	for lang in nodejs python dotnet go java; do \
+	  pulumi package gen-sdk ./bin/$(PROVIDER) --language $$lang -o sdk; \
+	done
 
 # Local snapshot build of the plugin archives (no publish).
 dist:
