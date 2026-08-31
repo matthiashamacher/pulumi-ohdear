@@ -85,6 +85,10 @@ jobs:
 
       - name: Build .NET SDK
         run: |
+          # gen-sdk saves the SVG logo as `logo.png`; NuGet only accepts a real
+          # PNG/JPG package icon, so drop the icon reference (the registry still
+          # uses the SVG via schema logoUrl). ponytail: ship a real PNG to keep it.
+          sed -i '/<PackageIcon>/d' sdk/dotnet/*.csproj
           # The csproj sets GeneratePackageOnBuild, so build drops the .nupkg
           # into bin/Debug/ where the publisher looks; `dotnet pack` double-runs
           # packaging and trips NU5026.
