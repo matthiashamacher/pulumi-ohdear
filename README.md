@@ -17,7 +17,6 @@ thanks, and the same disclaimer: this isn't built or supported by them.
 | `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
 | `provider/notificationdestination.go` | `ohdear:index:NotificationDestination` — full CRUD for team/monitor/tag/tagGroup levels |
 | `provider/statuspage.go` | `ohdear:index:StatusPage` — CRUD; title/team replace, monitors sync in place |
-| `provider/statuspageupdatetemplate.go` | `ohdear:index:StatusPageUpdateTemplate` — full CRUD |
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
 | `provider/taggroup.go` | `ohdear:index:TagGroup` — full CRUD |
 | `provider/cmd/pulumi-resource-ohdear/main.go` | Plugin entrypoint |
@@ -46,7 +45,8 @@ destroy only drops it from state. `Site` is still a stub. Resource tokens are
 mapped to the `index` module.
 
 Status page *updates* (`POST /api/status-page-updates`, the transient incident
-messages) are not modelled — only the page and the reusable templates.
+messages) and the reusable update templates are not modelled — only the page
+itself.
 
 `NotificationDestination` picks its owner with `level`
 (`team`/`monitor`/`tag`/`tagGroup`) + `ownerId`, both immutable. `destination`

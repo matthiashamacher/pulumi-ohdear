@@ -451,57 +451,6 @@
         "monitors"
       ]
     },
-    "ohdear:index:StatusPageUpdateTemplate": {
-      "description": "A reusable status page update template.",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "severity": {
-          "type": "string",
-          "description": "One of \"info\", \"warning\", \"high\", \"resolved\", \"scheduled\"."
-        },
-        "teamId": {
-          "type": "integer",
-          "replaceOnChanges": true
-        },
-        "templateId": {
-          "type": "integer"
-        },
-        "text": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "teamId",
-        "templateId"
-      ],
-      "inputProperties": {
-        "name": {
-          "type": "string"
-        },
-        "severity": {
-          "type": "string",
-          "description": "One of \"info\", \"warning\", \"high\", \"resolved\", \"scheduled\"."
-        },
-        "teamId": {
-          "type": "integer",
-          "replaceOnChanges": true
-        },
-        "text": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      },
-      "requiredInputs": [
-        "teamId"
-      ]
-    },
     "ohdear:index:Tag": {
       "description": "An Oh Dear tag. The API cannot update or delete tags: changing an input replaces the resource, and destroy only removes it from Pulumi state.",
       "properties": {

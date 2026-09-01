@@ -68,7 +68,6 @@ const alerts = new ohdear.NotificationDestination("email", {
 | `Tag` | A tag used to organize monitors. Create-only upstream. |
 | `TagGroup` | A named group of tags, with wildcard matching. |
 | `StatusPage` | A public status page and the monitors shown on it. |
-| `StatusPageUpdateTemplate` | A reusable status-page update message. |
 | `NotificationDestination` | Where alerts are delivered, scoped to a team, monitor, tag or tag group. |
 
 See the **Installation & Configuration** tab for setup and the API Docs tab for

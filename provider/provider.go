@@ -30,7 +30,6 @@ func New() (p.Provider, error) {
 			infer.Resource(&Monitor{}),
 			infer.Resource(&NotificationDestination{}),
 			infer.Resource(&StatusPage{}),
-			infer.Resource(&StatusPageUpdateTemplate{}),
 			infer.Resource(&Tag{}),
 			infer.Resource(&TagGroup{}),
 		).
