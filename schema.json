@@ -197,10 +197,40 @@
     "ohdear:index:Monitor": {
       "description": "An Oh Dear monitor (http, ping, tcp or ai).",
       "properties": {
+        "aiCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "applicationHealthCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "brokenLinksCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "certificateHealthCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "checks": {
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "crawlerSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
           }
         },
         "createdAt": {
@@ -209,14 +239,44 @@
         "description": {
           "type": "string"
         },
+        "dnsBlocklistCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "dnsCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "domainCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "friendlyName": {
           "type": "string"
         },
         "groupName": {
           "type": "string"
         },
+        "includeCheckTypesInReport": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "label": {
           "type": "string"
+        },
+        "lighthouseCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         },
         "monitorId": {
           "type": "integer"
@@ -224,8 +284,32 @@
         "notes": {
           "type": "string"
         },
+        "performanceCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "portsCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "realIpAddress": {
           "type": "string"
+        },
+        "sendReportToEmails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sitemapCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         },
         "sortUrl": {
           "type": "string"
@@ -252,6 +336,12 @@
         "updatedAt": {
           "type": "string"
         },
+        "uptimeCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "url": {
           "type": "string"
         },
@@ -272,14 +362,62 @@
         "updatedAt"
       ],
       "inputProperties": {
+        "aiCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "applicationHealthCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "brokenLinksCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "certificateHealthCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "checks": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
+        "crawlerSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "description": {
           "type": "string"
+        },
+        "dnsBlocklistCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "dnsCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "domainCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         },
         "friendlyName": {
           "type": "string"
@@ -287,11 +425,47 @@
         "groupName": {
           "type": "string"
         },
+        "includeCheckTypesInReport": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lighthouseCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "notes": {
           "type": "string"
         },
+        "performanceCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "portsCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
         "realIpAddress": {
           "type": "string"
+        },
+        "sendReportToEmails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sitemapCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         },
         "tags": {
           "type": "array",
@@ -308,6 +482,12 @@
           "description": "Monitor type: \"http\", \"ping\", \"tcp\" or \"ai\".",
           "default": "http",
           "replaceOnChanges": true
+        },
+        "uptimeCheckSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         },
         "url": {
           "type": "string"

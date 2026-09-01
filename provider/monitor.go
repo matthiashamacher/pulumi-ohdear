@@ -10,9 +10,11 @@ import (
 
 // Monitor is an Oh Dear monitor (https://ohdear.app/docs/api/monitors).
 //
-// ponytail: first cut covers the monitor itself plus the simple top-level knobs.
-// The per-check *_check_settings trees (uptime, ports, dns, lighthouse, ...) are
-// not modelled yet — add them when a stack actually needs to tune a check.
+// The per-check tuning lives in the `*CheckSettings` maps. They are open
+// passthroughs: put whatever the matching `*_check_settings` object at
+// https://ohdear.app/docs/api/monitors accepts. They are kept from inputs on
+// refresh (the API echoes them back with extra read-only keys), so drift inside
+// a settings map is not detected — the last `pulumi up` wins.
 type Monitor struct{}
 
 type MonitorArgs struct {
@@ -26,6 +28,23 @@ type MonitorArgs struct {
 	Notes         string   `pulumi:"notes,optional"`
 	Description   string   `pulumi:"description,optional"`
 	RealIPAddress string   `pulumi:"realIpAddress,optional"`
+
+	SendReportToEmails        []string `pulumi:"sendReportToEmails,optional"`
+	IncludeCheckTypesInReport []string `pulumi:"includeCheckTypesInReport,optional"`
+
+	UptimeCheckSettings            map[string]interface{} `pulumi:"uptimeCheckSettings,optional"`
+	PerformanceCheckSettings       map[string]interface{} `pulumi:"performanceCheckSettings,optional"`
+	BrokenLinksCheckSettings       map[string]interface{} `pulumi:"brokenLinksCheckSettings,optional"`
+	CertificateHealthCheckSettings map[string]interface{} `pulumi:"certificateHealthCheckSettings,optional"`
+	DNSCheckSettings               map[string]interface{} `pulumi:"dnsCheckSettings,optional"`
+	DomainCheckSettings            map[string]interface{} `pulumi:"domainCheckSettings,optional"`
+	LighthouseCheckSettings        map[string]interface{} `pulumi:"lighthouseCheckSettings,optional"`
+	ApplicationHealthCheckSettings map[string]interface{} `pulumi:"applicationHealthCheckSettings,optional"`
+	SitemapCheckSettings           map[string]interface{} `pulumi:"sitemapCheckSettings,optional"`
+	PortsCheckSettings             map[string]interface{} `pulumi:"portsCheckSettings,optional"`
+	DNSBlocklistCheckSettings      map[string]interface{} `pulumi:"dnsBlocklistCheckSettings,optional"`
+	AICheckSettings                map[string]interface{} `pulumi:"aiCheckSettings,optional"`
+	CrawlerSettings                map[string]interface{} `pulumi:"crawlerSettings,optional"`
 }
 
 type MonitorState struct {
@@ -90,6 +109,48 @@ func (w monitorWire) toState(inputs MonitorArgs) MonitorState {
 	}
 }
 
+// monitorSettingsBody holds the fields shared by create and update: the report
+// lists and the per-check settings maps. Every entry is omitempty — an unset
+// block is left untouched upstream.
+type monitorSettingsBody struct {
+	SendReportToEmails        []string `json:"send_report_to_emails,omitempty"`
+	IncludeCheckTypesInReport []string `json:"include_check_types_in_report,omitempty"`
+
+	UptimeCheckSettings            map[string]interface{} `json:"uptime_check_settings,omitempty"`
+	PerformanceCheckSettings       map[string]interface{} `json:"performance_check_settings,omitempty"`
+	BrokenLinksCheckSettings       map[string]interface{} `json:"broken_links_check_settings,omitempty"`
+	CertificateHealthCheckSettings map[string]interface{} `json:"certificate_health_check_settings,omitempty"`
+	DNSCheckSettings               map[string]interface{} `json:"dns_check_settings,omitempty"`
+	DomainCheckSettings            map[string]interface{} `json:"domain_check_settings,omitempty"`
+	LighthouseCheckSettings        map[string]interface{} `json:"lighthouse_check_settings,omitempty"`
+	ApplicationHealthCheckSettings map[string]interface{} `json:"application_health_check_settings,omitempty"`
+	SitemapCheckSettings           map[string]interface{} `json:"sitemap_check_settings,omitempty"`
+	PortsCheckSettings             map[string]interface{} `json:"ports_check_settings,omitempty"`
+	DNSBlocklistCheckSettings      map[string]interface{} `json:"dns_blocklist_check_settings,omitempty"`
+	AICheckSettings                map[string]interface{} `json:"ai_check_settings,omitempty"`
+	CrawlerSettings                map[string]interface{} `json:"crawler_settings,omitempty"`
+}
+
+func settingsBodyOf(in MonitorArgs) monitorSettingsBody {
+	return monitorSettingsBody{
+		SendReportToEmails:             in.SendReportToEmails,
+		IncludeCheckTypesInReport:      in.IncludeCheckTypesInReport,
+		UptimeCheckSettings:            in.UptimeCheckSettings,
+		PerformanceCheckSettings:       in.PerformanceCheckSettings,
+		BrokenLinksCheckSettings:       in.BrokenLinksCheckSettings,
+		CertificateHealthCheckSettings: in.CertificateHealthCheckSettings,
+		DNSCheckSettings:               in.DNSCheckSettings,
+		DomainCheckSettings:            in.DomainCheckSettings,
+		LighthouseCheckSettings:        in.LighthouseCheckSettings,
+		ApplicationHealthCheckSettings: in.ApplicationHealthCheckSettings,
+		SitemapCheckSettings:           in.SitemapCheckSettings,
+		PortsCheckSettings:             in.PortsCheckSettings,
+		DNSBlocklistCheckSettings:      in.DNSBlocklistCheckSettings,
+		AICheckSettings:                in.AICheckSettings,
+		CrawlerSettings:                in.CrawlerSettings,
+	}
+}
+
 // createBody omits empty optionals so Oh Dear applies its own defaults.
 type monitorCreateBody struct {
 	URL           string   `json:"url"`
@@ -102,10 +163,12 @@ type monitorCreateBody struct {
 	Notes         string   `json:"notes,omitempty"`
 	Description   string   `json:"description,omitempty"`
 	RealIPAddress string   `json:"real_ip_address,omitempty"`
+	monitorSettingsBody
 }
 
-// updateBody sends every managed field (no omitempty) so clearing an input in
-// code clears it in Oh Dear. team_id and type are immutable and never sent.
+// updateBody sends every managed scalar field (no omitempty) so clearing an
+// input in code clears it in Oh Dear. team_id and type are immutable and never
+// sent. The settings maps stay omitempty (see the Monitor doc comment).
 type monitorUpdateBody struct {
 	URL           string   `json:"url"`
 	Checks        []string `json:"checks,omitempty"`
@@ -115,6 +178,7 @@ type monitorUpdateBody struct {
 	Notes         string   `json:"notes"`
 	Description   string   `json:"description"`
 	RealIPAddress string   `json:"real_ip_address"`
+	monitorSettingsBody
 }
 
 func (Monitor) Create(ctx context.Context, req infer.CreateRequest[MonitorArgs]) (infer.CreateResponse[MonitorState], error) {
@@ -130,6 +194,7 @@ func (Monitor) Create(ctx context.Context, req infer.CreateRequest[MonitorArgs])
 		URL: in.URL, TeamID: in.TeamID, Type: in.Type, Checks: in.Checks,
 		FriendlyName: in.FriendlyName, GroupName: in.GroupName, Tags: in.Tags,
 		Notes: in.Notes, Description: in.Description, RealIPAddress: in.RealIPAddress,
+		monitorSettingsBody: settingsBodyOf(in),
 	}
 	var out monitorWire
 	if err := infer.GetConfig[Config](ctx).client.Do(ctx, http.MethodPost, "/monitors", body, &out); err != nil {
@@ -165,6 +230,7 @@ func (Monitor) Update(ctx context.Context, req infer.UpdateRequest[MonitorArgs, 
 		URL: in.URL, Checks: in.Checks, FriendlyName: in.FriendlyName,
 		GroupName: in.GroupName, Tags: in.Tags, Notes: in.Notes,
 		Description: in.Description, RealIPAddress: in.RealIPAddress,
+		monitorSettingsBody: settingsBodyOf(in),
 	}
 	var out monitorWire
 	if err := infer.GetConfig[Config](ctx).client.Do(ctx, http.MethodPut, "/monitors/"+req.ID, body, &out); err != nil {

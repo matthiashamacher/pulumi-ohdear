@@ -38,10 +38,14 @@ make sdk        # -> sdk/nodejs
 
 ## Status
 
-`Monitor`, `Tag` and `TagGroup` call the real API. `Monitor` covers the monitor
-plus simple top-level fields (`checks`, `friendlyName`, `groupName`, `tags`,
-`notes`, `description`, `realIpAddress`); the per-check `*_check_settings` trees
-are not modelled yet. `teamId` and `type` are immutable (replace on change).
+`Monitor`, `Tag` and `TagGroup` call the real API. `Monitor` covers the monitor,
+the top-level fields (`checks`, `friendlyName`, `groupName`, `tags`, `notes`,
+`description`, `realIpAddress`, `sendReportToEmails`, `includeCheckTypesInReport`)
+and the per-check tuning via the `*CheckSettings` maps (`uptimeCheckSettings`,
+`lighthouseCheckSettings`, `portsCheckSettings`, …). Those maps are open
+passthroughs to the matching `*_check_settings` API object and are kept from
+inputs on refresh, so drift inside a map is not detected. `teamId` and `type`
+are immutable (replace on change).
 `Tag` has no update or delete endpoint upstream, so input changes replace it and
 destroy only drops it from state. `Site` is still a stub. Resource tokens are
 mapped to the `index` module.
