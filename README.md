@@ -42,9 +42,10 @@ the top-level fields (`checks`, `friendlyName`, `groupName`, `tags`, `notes`,
 `description`, `realIpAddress`, `sendReportToEmails`, `includeCheckTypesInReport`)
 and the per-check tuning via the `*CheckSettings` maps (`uptimeCheckSettings`,
 `lighthouseCheckSettings`, `portsCheckSettings`, …). Those maps are open
-passthroughs to the matching `*_check_settings` API object and are kept from
-inputs on refresh, so drift inside a map is not detected. `teamId` and `type`
-are immutable (replace on change).
+passthroughs to the matching `*_check_settings` API object. On refresh only the
+keys the program set are reconciled against the API response, so an edit made in
+the Oh Dear UI shows as drift while the read-only keys the API adds are ignored.
+`teamId` and `type` are immutable (replace on change).
 `Tag` has no update or delete endpoint upstream, so input changes replace it and
 destroy only drops it from state. Resource tokens are mapped to the `index`
 module.

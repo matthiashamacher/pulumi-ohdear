@@ -12,9 +12,10 @@ import (
 //
 // The per-check tuning lives in the `*CheckSettings` maps. They are open
 // passthroughs: put whatever the matching `*_check_settings` object at
-// https://ohdear.app/docs/api/monitors accepts. They are kept from inputs on
-// refresh (the API echoes them back with extra read-only keys), so drift inside
-// a settings map is not detected — the last `pulumi up` wins.
+// https://ohdear.app/docs/api/monitors accepts. On refresh only the keys the
+// program set are reconciled against the API response (see mergeSettings), so a
+// change made in the Oh Dear UI shows as drift while the read-only keys the API
+// adds to its response are ignored.
 type Monitor struct{}
 
 type MonitorArgs struct {
@@ -84,6 +85,45 @@ type monitorWire struct {
 	SummarizedCheckResult string   `json:"summarized_check_result"`
 	CreatedAt             string   `json:"created_at"`
 	UpdatedAt             string   `json:"updated_at"`
+
+	SendReportToEmails        []string `json:"send_report_to_emails"`
+	IncludeCheckTypesInReport []string `json:"include_check_types_in_report"`
+
+	UptimeCheckSettings            map[string]interface{} `json:"uptime_check_settings"`
+	PerformanceCheckSettings       map[string]interface{} `json:"performance_check_settings"`
+	BrokenLinksCheckSettings       map[string]interface{} `json:"broken_links_check_settings"`
+	CertificateHealthCheckSettings map[string]interface{} `json:"certificate_health_check_settings"`
+	DNSCheckSettings               map[string]interface{} `json:"dns_check_settings"`
+	DomainCheckSettings            map[string]interface{} `json:"domain_check_settings"`
+	LighthouseCheckSettings        map[string]interface{} `json:"lighthouse_check_settings"`
+	ApplicationHealthCheckSettings map[string]interface{} `json:"application_health_check_settings"`
+	SitemapCheckSettings           map[string]interface{} `json:"sitemap_check_settings"`
+	PortsCheckSettings             map[string]interface{} `json:"ports_check_settings"`
+	DNSBlocklistCheckSettings      map[string]interface{} `json:"dns_blocklist_check_settings"`
+	AICheckSettings                map[string]interface{} `json:"ai_check_settings"`
+	CrawlerSettings                map[string]interface{} `json:"crawler_settings"`
+}
+
+// mergeSettings reconciles one settings map after a refresh. It keeps only the
+// keys the program set (want), taking each value from the API response (got), so
+// an edit made in the Oh Dear UI shows as drift while the read-only keys and
+// defaults the API adds to its response do not. If the response omits the block
+// entirely, the sent values are kept — the API did not report on it.
+//
+// ponytail: value-level comparison is left to Pulumi's differ; JSON type
+// coercion by the API (e.g. a number echoed as a string) can still surface a
+// cosmetic diff.
+func mergeSettings(want, got map[string]interface{}) map[string]interface{} {
+	if want == nil || len(got) == 0 {
+		return want
+	}
+	out := make(map[string]interface{}, len(want))
+	for k := range want {
+		if v, ok := got[k]; ok {
+			out[k] = v
+		}
+	}
+	return out
 }
 
 // toState refreshes server-owned fields from a response while preserving the
@@ -97,6 +137,25 @@ func (w monitorWire) toState(inputs MonitorArgs) MonitorState {
 	inputs.Notes = w.Notes
 	inputs.Description = w.Description
 	inputs.RealIPAddress = w.RealIPAddress
+	if w.SendReportToEmails != nil {
+		inputs.SendReportToEmails = w.SendReportToEmails
+	}
+	if w.IncludeCheckTypesInReport != nil {
+		inputs.IncludeCheckTypesInReport = w.IncludeCheckTypesInReport
+	}
+	inputs.UptimeCheckSettings = mergeSettings(inputs.UptimeCheckSettings, w.UptimeCheckSettings)
+	inputs.PerformanceCheckSettings = mergeSettings(inputs.PerformanceCheckSettings, w.PerformanceCheckSettings)
+	inputs.BrokenLinksCheckSettings = mergeSettings(inputs.BrokenLinksCheckSettings, w.BrokenLinksCheckSettings)
+	inputs.CertificateHealthCheckSettings = mergeSettings(inputs.CertificateHealthCheckSettings, w.CertificateHealthCheckSettings)
+	inputs.DNSCheckSettings = mergeSettings(inputs.DNSCheckSettings, w.DNSCheckSettings)
+	inputs.DomainCheckSettings = mergeSettings(inputs.DomainCheckSettings, w.DomainCheckSettings)
+	inputs.LighthouseCheckSettings = mergeSettings(inputs.LighthouseCheckSettings, w.LighthouseCheckSettings)
+	inputs.ApplicationHealthCheckSettings = mergeSettings(inputs.ApplicationHealthCheckSettings, w.ApplicationHealthCheckSettings)
+	inputs.SitemapCheckSettings = mergeSettings(inputs.SitemapCheckSettings, w.SitemapCheckSettings)
+	inputs.PortsCheckSettings = mergeSettings(inputs.PortsCheckSettings, w.PortsCheckSettings)
+	inputs.DNSBlocklistCheckSettings = mergeSettings(inputs.DNSBlocklistCheckSettings, w.DNSBlocklistCheckSettings)
+	inputs.AICheckSettings = mergeSettings(inputs.AICheckSettings, w.AICheckSettings)
+	inputs.CrawlerSettings = mergeSettings(inputs.CrawlerSettings, w.CrawlerSettings)
 	return MonitorState{
 		MonitorArgs:           inputs,
 		MonitorID:             w.ID,
