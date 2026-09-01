@@ -15,6 +15,7 @@ thanks, and the same disclaimer: this isn't built or supported by them.
 | `provider/config.go` | Provider config — `apiToken` / `OHDEAR_API_TOKEN` |
 | `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
 | `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
+| `provider/croncheck.go` | `ohdear:index:CronCheck` — full CRUD; cron job monitoring on a monitor |
 | `provider/notificationdestination.go` | `ohdear:index:NotificationDestination` — full CRUD for team/monitor/tag/tagGroup levels |
 | `provider/statuspage.go` | `ohdear:index:StatusPage` — CRUD; title/team replace, monitors sync in place |
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
@@ -47,6 +48,12 @@ mapped to the `index` module.
 Status page *updates* (`POST /api/status-page-updates`, the transient incident
 messages) and the reusable update templates are not modelled — only the page
 itself.
+
+`CronCheck` is full CRUD against a monitor's `cron-checks` endpoints. `monitorId`
+is immutable (replace on change) since the API can't move a check between
+monitors. The imperative snooze/unsnooze and bulk `sync` endpoints are not
+modelled. Read lists the parent monitor's checks, so importing one needs
+`monitorId` supplied.
 
 `NotificationDestination` picks its owner with `level`
 (`team`/`monitor`/`tag`/`tagGroup`) + `ownerId`, both immutable. `destination`

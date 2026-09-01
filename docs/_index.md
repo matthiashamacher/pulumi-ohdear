@@ -65,6 +65,7 @@ const alerts = new ohdear.NotificationDestination("email", {
 | Resource | Purpose |
 | --- | --- |
 | `Monitor` | A monitored URL or host (`http`, `ping`, `tcp`, `ai`) and its checks. |
+| `CronCheck` | A cron job monitor on a `Monitor`; ping its URL on each successful run. |
 | `Tag` | A tag used to organize monitors. Create-only upstream. |
 | `TagGroup` | A named group of tags, with wildcard matching. |
 | `StatusPage` | A public status page and the monitors shown on it. |

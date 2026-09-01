@@ -103,6 +103,97 @@
     }
   },
   "resources": {
+    "ohdear:index:CronCheck": {
+      "description": "An Oh Dear cron job monitor. Curl `pingUrl` from the job on success.",
+      "properties": {
+        "createdAt": {
+          "type": "string"
+        },
+        "cronCheckId": {
+          "type": "integer"
+        },
+        "cronExpression": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "frequencyInMinutes": {
+          "type": "integer"
+        },
+        "graceTimeInMinutes": {
+          "type": "integer",
+          "description": "How long a ping may be late before the check alerts."
+        },
+        "humanReadableCronExpression": {
+          "type": "string"
+        },
+        "monitorId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "pingUrl": {
+          "type": "string"
+        },
+        "serverTimezone": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "One of \"simple\" (uses frequencyInMinutes) or \"cron\" (uses cronExpression + serverTimezone)."
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "monitorId",
+        "name",
+        "type",
+        "cronCheckId",
+        "uuid",
+        "pingUrl",
+        "humanReadableCronExpression",
+        "createdAt"
+      ],
+      "inputProperties": {
+        "cronExpression": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "frequencyInMinutes": {
+          "type": "integer"
+        },
+        "graceTimeInMinutes": {
+          "type": "integer",
+          "description": "How long a ping may be late before the check alerts."
+        },
+        "monitorId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "serverTimezone": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "One of \"simple\" (uses frequencyInMinutes) or \"cron\" (uses cronExpression + serverTimezone)."
+        }
+      },
+      "requiredInputs": [
+        "monitorId",
+        "name",
+        "type"
+      ]
+    },
     "ohdear:index:Monitor": {
       "description": "An Oh Dear monitor (http, ping, tcp or ai).",
       "properties": {

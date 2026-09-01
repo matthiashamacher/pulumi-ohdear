@@ -28,6 +28,7 @@ func New() (p.Provider, error) {
 		WithResources(
 			infer.Resource(&Site{}),
 			infer.Resource(&Monitor{}),
+			infer.Resource(&CronCheck{}),
 			infer.Resource(&NotificationDestination{}),
 			infer.Resource(&StatusPage{}),
 			infer.Resource(&Tag{}),
