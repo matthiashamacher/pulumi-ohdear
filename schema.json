@@ -414,6 +414,107 @@
         "destination"
       ]
     },
+    "ohdear:index:RecurringMaintenancePeriod": {
+      "description": "An Oh Dear recurring maintenance schedule that generates maintenance periods on a cadence.",
+      "properties": {
+        "createdAt": {
+          "type": "string"
+        },
+        "dayOfMonth": {
+          "type": "integer",
+          "description": "Day for a monthly schedule, 1 to 31."
+        },
+        "daysOfWeek": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Days for a weekly schedule, 0 (Sunday) to 6 (Saturday)."
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End of the window, `HH:MM`."
+        },
+        "humanReadableSchedule": {
+          "type": "string"
+        },
+        "lastGeneratedUntil": {
+          "type": "string"
+        },
+        "monitorId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "recurrenceType": {
+          "type": "string",
+          "description": "One of \"daily\", \"weekly\" or \"monthly\"."
+        },
+        "recurringMaintenancePeriodId": {
+          "type": "integer"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start of the window, `HH:MM`."
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "monitorId",
+        "name",
+        "recurrenceType",
+        "startTime",
+        "endTime",
+        "recurringMaintenancePeriodId",
+        "humanReadableSchedule",
+        "lastGeneratedUntil",
+        "createdAt",
+        "updatedAt"
+      ],
+      "inputProperties": {
+        "dayOfMonth": {
+          "type": "integer",
+          "description": "Day for a monthly schedule, 1 to 31."
+        },
+        "daysOfWeek": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Days for a weekly schedule, 0 (Sunday) to 6 (Saturday)."
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End of the window, `HH:MM`."
+        },
+        "monitorId": {
+          "type": "integer",
+          "replaceOnChanges": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "recurrenceType": {
+          "type": "string",
+          "description": "One of \"daily\", \"weekly\" or \"monthly\"."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start of the window, `HH:MM`."
+        }
+      },
+      "requiredInputs": [
+        "monitorId",
+        "name",
+        "recurrenceType",
+        "startTime",
+        "endTime"
+      ]
+    },
     "ohdear:index:Site": {
       "description": "A website monitored by Oh Dear.",
       "properties": {

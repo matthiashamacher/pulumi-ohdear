@@ -16,6 +16,7 @@ thanks, and the same disclaimer: this isn't built or supported by them.
 | `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
 | `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
 | `provider/croncheck.go` | `ohdear:index:CronCheck` — full CRUD; cron job monitoring on a monitor |
+| `provider/recurringmaintenanceperiod.go` | `ohdear:index:RecurringMaintenancePeriod` — full CRUD; recurring maintenance schedule |
 | `provider/notificationdestination.go` | `ohdear:index:NotificationDestination` — full CRUD for team/monitor/tag/tagGroup levels |
 | `provider/statuspage.go` | `ohdear:index:StatusPage` — CRUD; title/team replace, monitors sync in place |
 | `provider/tag.go` | `ohdear:index:Tag` — create + read (no update/delete in the API) |
@@ -54,6 +55,12 @@ is immutable (replace on change) since the API can't move a check between
 monitors. The imperative snooze/unsnooze and bulk `sync` endpoints are not
 modelled. Read lists the parent monitor's checks, so importing one needs
 `monitorId` supplied.
+
+`RecurringMaintenancePeriod` is full CRUD for the recurring maintenance
+*schedule* only — one-off maintenance periods are transient events, not desired
+state. `monitorId` is immutable (accepted on create, not on update). The
+`generate_now` / `regenerate_future_periods` / `delete_future_periods` backfill
+knobs are left at their API defaults.
 
 `NotificationDestination` picks its owner with `level`
 (`team`/`monitor`/`tag`/`tagGroup`) + `ownerId`, both immutable. `destination`
