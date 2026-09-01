@@ -13,7 +13,6 @@ thanks, and the same disclaimer: this isn't built or supported by them.
 | --- | --- |
 | `provider/provider.go` | Provider registration (`infer.NewProviderBuilder`) |
 | `provider/config.go` | Provider config — `apiToken` / `OHDEAR_API_TOKEN` |
-| `provider/site.go` | `ohdear:index:Site` resource (stub CRUD) |
 | `provider/monitor.go` | `ohdear:index:Monitor` — full CRUD (top-level fields only) |
 | `provider/croncheck.go` | `ohdear:index:CronCheck` — full CRUD; cron job monitoring on a monitor |
 | `provider/recurringmaintenanceperiod.go` | `ohdear:index:RecurringMaintenancePeriod` — full CRUD; recurring maintenance schedule |
@@ -47,8 +46,8 @@ passthroughs to the matching `*_check_settings` API object and are kept from
 inputs on refresh, so drift inside a map is not detected. `teamId` and `type`
 are immutable (replace on change).
 `Tag` has no update or delete endpoint upstream, so input changes replace it and
-destroy only drops it from state. `Site` is still a stub. Resource tokens are
-mapped to the `index` module.
+destroy only drops it from state. Resource tokens are mapped to the `index`
+module.
 
 Status page *updates* (`POST /api/status-page-updates`, the transient incident
 messages) and the reusable update templates are not modelled — only the page

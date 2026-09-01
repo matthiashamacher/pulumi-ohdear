@@ -695,53 +695,6 @@
         "endTime"
       ]
     },
-    "ohdear:index:Site": {
-      "description": "A website monitored by Oh Dear.",
-      "properties": {
-        "siteId": {
-          "type": "integer"
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "teams": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          }
-        },
-        "url": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "url",
-        "siteId"
-      ],
-      "inputProperties": {
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "teams": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          }
-        },
-        "url": {
-          "type": "string"
-        }
-      },
-      "requiredInputs": [
-        "url"
-      ]
-    },
     "ohdear:index:StatusPage": {
       "description": "An Oh Dear status page. `monitors` is the full set of monitors shown on the page.",
       "properties": {

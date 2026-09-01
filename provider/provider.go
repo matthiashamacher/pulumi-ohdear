@@ -26,7 +26,6 @@ func New() (p.Provider, error) {
 		WithLogoURL("https://raw.githubusercontent.com/matthiashamacher/pulumi-ohdear/main/assets/logo.png").
 		WithPluginDownloadURL("github://api.github.com/matthiashamacher/pulumi-ohdear").
 		WithResources(
-			infer.Resource(&Site{}),
 			infer.Resource(&Monitor{}),
 			infer.Resource(&CronCheck{}),
 			infer.Resource(&RecurringMaintenancePeriod{}),
