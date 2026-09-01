@@ -65,8 +65,44 @@ func (m *Monitor) Annotate(a infer.Annotator) {
 }
 
 func (a *MonitorArgs) Annotate(an infer.Annotator) {
+	an.Describe(&a.URL, "URL or hostname to monitor.")
+	an.Describe(&a.TeamID, "Team that owns the monitor. Immutable — a change replaces it.")
 	an.Describe(&a.Type, `Monitor type: "http", "ping", "tcp" or "ai".`)
 	an.SetDefault(&a.Type, "http")
+	an.Describe(&a.Checks, "Check types to enable (uptime, broken_links, lighthouse, performance, dns, certificate_health, mixed_content, ...).")
+	an.Describe(&a.FriendlyName, "Display name in the Oh Dear UI. Not echoed by the API; kept from inputs.")
+	an.Describe(&a.GroupName, "Group the monitor is filed under.")
+	an.Describe(&a.Tags, "Tag names applied to the monitor.")
+	an.Describe(&a.Notes, "Free-form notes.")
+	an.Describe(&a.Description, "Short description of what is monitored.")
+	an.Describe(&a.RealIPAddress, "Origin server IP for sites behind a proxy or CDN.")
+	an.Describe(&a.SendReportToEmails, "Addresses that receive the monitor's periodic report.")
+	an.Describe(&a.IncludeCheckTypesInReport, "Check types included in that report.")
+
+	settings := "Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
+	an.Describe(&a.UptimeCheckSettings, "Uptime/reachability check tuning. "+settings)
+	an.Describe(&a.PerformanceCheckSettings, "Performance check tuning. "+settings)
+	an.Describe(&a.BrokenLinksCheckSettings, "Broken-links check tuning. "+settings)
+	an.Describe(&a.CertificateHealthCheckSettings, "Certificate-health check tuning. "+settings)
+	an.Describe(&a.DNSCheckSettings, "DNS check tuning. "+settings)
+	an.Describe(&a.DomainCheckSettings, "Domain-expiry check tuning. "+settings)
+	an.Describe(&a.LighthouseCheckSettings, "Lighthouse check tuning. "+settings)
+	an.Describe(&a.ApplicationHealthCheckSettings, "Application-health check tuning. "+settings)
+	an.Describe(&a.SitemapCheckSettings, "Sitemap check tuning. "+settings)
+	an.Describe(&a.PortsCheckSettings, "Ports check tuning. "+settings)
+	an.Describe(&a.DNSBlocklistCheckSettings, "DNS-blocklist check tuning. "+settings)
+	an.Describe(&a.AICheckSettings, "AI check tuning. "+settings)
+	an.Describe(&a.CrawlerSettings, "Crawler settings shared by the crawl-based checks. "+settings)
+}
+
+func (s *MonitorState) Annotate(an infer.Annotator) {
+	an.Describe(&s.MonitorID, "Numeric Oh Dear monitor ID.")
+	an.Describe(&s.Label, "Human-readable label the API derives from the URL.")
+	an.Describe(&s.UsesHTTPS, "Whether the monitored URL uses HTTPS.")
+	an.Describe(&s.SortURL, "Normalised URL the API uses for sorting.")
+	an.Describe(&s.SummarizedCheckResult, "Worst current result across the checks (succeeded / failed / warning).")
+	an.Describe(&s.CreatedAt, "When the monitor was created, as an ISO 8601 timestamp.")
+	an.Describe(&s.UpdatedAt, "When the monitor was last updated, as an ISO 8601 timestamp.")
 }
 
 type monitorWire struct {

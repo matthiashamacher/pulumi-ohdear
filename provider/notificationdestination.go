@@ -46,7 +46,17 @@ func (a *NotificationDestinationArgs) Annotate(an infer.Annotator) {
 	an.Describe(&a.Level, `Owner type: "team", "monitor", "tag" or "tagGroup".`)
 	an.Describe(&a.OwnerID, "ID of the owning team, monitor, tag or tag group.")
 	an.Describe(&a.Channel, `Notification channel, e.g. "mail", "slack", "discord", "webhook".`)
+	an.Describe(&a.Destination, `Channel-specific settings, e.g. { url: ... } for a webhook, { channel: ... } for Slack. `+
+		`Values are strings; use "true"/"false" for booleans such as Opsgenie's euEndpoint. Secret; kept from inputs on refresh.`)
+	an.Describe(&a.NotificationTypes, "Event types that trigger a notification (uptime, certificate_health, ...). Empty means all.")
+	an.Describe(&a.Label, "Display label for the destination.")
+	an.Describe(&a.Enabled, "Whether the destination is active. Default true; toggled via the enable/disable endpoints.")
 	an.SetDefault(&a.Enabled, true)
+}
+
+func (s *NotificationDestinationState) Annotate(an infer.Annotator) {
+	an.Describe(&s.DestinationID, "Numeric Oh Dear notification destination ID.")
+	an.Describe(&s.DisabledReason, "Why Oh Dear disabled the destination, if it did (e.g. repeated delivery failures).")
 }
 
 type ndWire struct {

@@ -44,6 +44,29 @@ func (s *StatusPage) Annotate(a infer.Annotator) {
 	a.Describe(&s, "An Oh Dear status page. `monitors` is the full set of monitors shown on the page.")
 }
 
+func (m *StatusPageMonitor) Annotate(a infer.Annotator) {
+	a.Describe(&m.ID, "Monitor ID to show on the page.")
+	a.Describe(&m.Clickable, "Whether the entry links to the monitor's detail page. Default false.")
+}
+
+func (a *StatusPageArgs) Annotate(an infer.Annotator) {
+	an.Describe(&a.TeamID, "Team that owns the page. Immutable — no API endpoint edits the page itself, so a change replaces it.")
+	an.Describe(&a.Title, "Status page title. Immutable, same reason as teamId.")
+	an.Describe(&a.Monitors, "Full set of monitors shown on the page; syncing this list replaces the previous set.")
+}
+
+func (s *StatusPageState) Annotate(an infer.Annotator) {
+	an.Describe(&s.StatusPageID, "Numeric Oh Dear status page ID.")
+	an.Describe(&s.Slug, "URL slug on the Oh Dear-hosted domain.")
+	an.Describe(&s.Domain, "Custom domain serving the page, if configured.")
+	an.Describe(&s.FullURL, "Fully-qualified URL of the status page.")
+	an.Describe(&s.Timezone, "Timezone the page renders times in.")
+	an.Describe(&s.SummarizedStatus, "Current overall status shown on the page.")
+	an.Describe(&s.BadgeID, "ID used to build the status badge image URL.")
+	an.Describe(&s.CreatedAt, "When the page was created, as an ISO 8601 timestamp.")
+	an.Describe(&s.UpdatedAt, "When the page was last updated, as an ISO 8601 timestamp.")
+}
+
 type statusPageWire struct {
 	ID               int    `json:"id"`
 	Title            string `json:"title"`

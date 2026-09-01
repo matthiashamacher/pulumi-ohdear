@@ -59,10 +59,12 @@
     "ohdear:index:StatusPageMonitor": {
       "properties": {
         "clickable": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether the entry links to the monitor's detail page. Default false."
         },
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Monitor ID to show on the page."
         }
       },
       "type": "object",
@@ -107,46 +109,57 @@
       "description": "An Oh Dear cron job monitor. Curl `pingUrl` from the job on success.",
       "properties": {
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the cron check was created, as an ISO 8601 timestamp."
         },
         "cronCheckId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear cron check ID."
         },
         "cronExpression": {
-          "type": "string"
+          "type": "string",
+          "description": "For \"cron\" checks: crontab expression for when a ping is expected."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Free-form description."
         },
         "frequencyInMinutes": {
-          "type": "integer"
+          "type": "integer",
+          "description": "For \"simple\" checks: how often a ping is expected."
         },
         "graceTimeInMinutes": {
           "type": "integer",
           "description": "How long a ping may be late before the check alerts."
         },
         "humanReadableCronExpression": {
-          "type": "string"
+          "type": "string",
+          "description": "Plain-English rendering of the schedule."
         },
         "monitorId": {
           "type": "integer",
+          "description": "Monitor this cron check belongs to. Immutable — the API cannot move a check between monitors.",
           "replaceOnChanges": true
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Display name for the cron check."
         },
         "pingUrl": {
-          "type": "string"
+          "type": "string",
+          "description": "URL the job must request on each successful run."
         },
         "serverTimezone": {
-          "type": "string"
+          "type": "string",
+          "description": "For \"cron\" checks: timezone the expression is evaluated in, e.g. Europe/Berlin."
         },
         "type": {
           "type": "string",
           "description": "One of \"simple\" (uses frequencyInMinutes) or \"cron\" (uses cronExpression + serverTimezone)."
         },
         "uuid": {
-          "type": "string"
+          "type": "string",
+          "description": "Stable UUID for the cron check; part of the ping URL."
         }
       },
       "required": [
@@ -161,13 +174,16 @@
       ],
       "inputProperties": {
         "cronExpression": {
-          "type": "string"
+          "type": "string",
+          "description": "For \"cron\" checks: crontab expression for when a ping is expected."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Free-form description."
         },
         "frequencyInMinutes": {
-          "type": "integer"
+          "type": "integer",
+          "description": "For \"simple\" checks: how often a ping is expected."
         },
         "graceTimeInMinutes": {
           "type": "integer",
@@ -175,13 +191,16 @@
         },
         "monitorId": {
           "type": "integer",
+          "description": "Monitor this cron check belongs to. Immutable — the API cannot move a check between monitors.",
           "replaceOnChanges": true
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Display name for the cron check."
         },
         "serverTimezone": {
-          "type": "string"
+          "type": "string",
+          "description": "For \"cron\" checks: timezone the expression is evaluated in, e.g. Europe/Berlin."
         },
         "type": {
           "type": "string",
@@ -201,130 +220,157 @@
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "AI check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "applicationHealthCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Application-health check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "brokenLinksCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Broken-links check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "certificateHealthCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Certificate-health check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "checks": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Check types to enable (uptime, broken_links, lighthouse, performance, dns, certificate_health, mixed_content, ...)."
         },
         "crawlerSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Crawler settings shared by the crawl-based checks. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the monitor was created, as an ISO 8601 timestamp."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Short description of what is monitored."
         },
         "dnsBlocklistCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "DNS-blocklist check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "dnsCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "DNS check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "domainCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Domain-expiry check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "friendlyName": {
-          "type": "string"
+          "type": "string",
+          "description": "Display name in the Oh Dear UI. Not echoed by the API; kept from inputs."
         },
         "groupName": {
-          "type": "string"
+          "type": "string",
+          "description": "Group the monitor is filed under."
         },
         "includeCheckTypesInReport": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Check types included in that report."
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Human-readable label the API derives from the URL."
         },
         "lighthouseCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Lighthouse check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "monitorId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear monitor ID."
         },
         "notes": {
-          "type": "string"
+          "type": "string",
+          "description": "Free-form notes."
         },
         "performanceCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Performance check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "portsCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Ports check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "realIpAddress": {
-          "type": "string"
+          "type": "string",
+          "description": "Origin server IP for sites behind a proxy or CDN."
         },
         "sendReportToEmails": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Addresses that receive the monitor's periodic report."
         },
         "sitemapCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Sitemap check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "sortUrl": {
-          "type": "string"
+          "type": "string",
+          "description": "Normalised URL the API uses for sorting."
         },
         "summarizedCheckResult": {
-          "type": "string"
+          "type": "string",
+          "description": "Worst current result across the checks (succeeded / failed / warning)."
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Tag names applied to the monitor."
         },
         "teamId": {
           "type": "integer",
+          "description": "Team that owns the monitor. Immutable — a change replaces it.",
           "replaceOnChanges": true
         },
         "type": {
@@ -334,19 +380,23 @@
           "replaceOnChanges": true
         },
         "updatedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the monitor was last updated, as an ISO 8601 timestamp."
         },
         "uptimeCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Uptime/reachability check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "url": {
-          "type": "string"
+          "type": "string",
+          "description": "URL or hostname to monitor."
         },
         "usesHttps": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether the monitored URL uses HTTPS."
         }
       },
       "required": [
@@ -366,115 +416,137 @@
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "AI check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "applicationHealthCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Application-health check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "brokenLinksCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Broken-links check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "certificateHealthCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Certificate-health check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "checks": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Check types to enable (uptime, broken_links, lighthouse, performance, dns, certificate_health, mixed_content, ...)."
         },
         "crawlerSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Crawler settings shared by the crawl-based checks. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Short description of what is monitored."
         },
         "dnsBlocklistCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "DNS-blocklist check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "dnsCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "DNS check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "domainCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Domain-expiry check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "friendlyName": {
-          "type": "string"
+          "type": "string",
+          "description": "Display name in the Oh Dear UI. Not echoed by the API; kept from inputs."
         },
         "groupName": {
-          "type": "string"
+          "type": "string",
+          "description": "Group the monitor is filed under."
         },
         "includeCheckTypesInReport": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Check types included in that report."
         },
         "lighthouseCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Lighthouse check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "notes": {
-          "type": "string"
+          "type": "string",
+          "description": "Free-form notes."
         },
         "performanceCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Performance check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "portsCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Ports check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "realIpAddress": {
-          "type": "string"
+          "type": "string",
+          "description": "Origin server IP for sites behind a proxy or CDN."
         },
         "sendReportToEmails": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Addresses that receive the monitor's periodic report."
         },
         "sitemapCheckSettings": {
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Sitemap check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Tag names applied to the monitor."
         },
         "teamId": {
           "type": "integer",
+          "description": "Team that owns the monitor. Immutable — a change replaces it.",
           "replaceOnChanges": true
         },
         "type": {
@@ -487,10 +559,12 @@
           "type": "object",
           "additionalProperties": {
             "$ref": "pulumi.json#/Any"
-          }
+          },
+          "description": "Uptime/reachability check tuning. Open map passed through to the matching *_check_settings API object; see https://ohdear.app/docs/api/monitors. Only keys set here are reconciled on refresh."
         },
         "url": {
-          "type": "string"
+          "type": "string",
+          "description": "URL or hostname to monitor."
         }
       },
       "requiredInputs": [
@@ -510,20 +584,25 @@
           "additionalProperties": {
             "type": "string"
           },
+          "description": "Channel-specific settings, e.g. { url: ... } for a webhook, { channel: ... } for Slack. Values are strings; use \"true\"/\"false\" for booleans such as Opsgenie's euEndpoint. Secret; kept from inputs on refresh.",
           "secret": true
         },
         "destinationId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear notification destination ID."
         },
         "disabledReason": {
-          "type": "string"
+          "type": "string",
+          "description": "Why Oh Dear disabled the destination, if it did (e.g. repeated delivery failures)."
         },
         "enabled": {
           "type": "boolean",
+          "description": "Whether the destination is active. Default true; toggled via the enable/disable endpoints.",
           "default": true
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Display label for the destination."
         },
         "level": {
           "type": "string",
@@ -534,7 +613,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Event types that trigger a notification (uptime, certificate_health, ...). Empty means all."
         },
         "ownerId": {
           "type": "integer",
@@ -561,14 +641,17 @@
           "additionalProperties": {
             "type": "string"
           },
+          "description": "Channel-specific settings, e.g. { url: ... } for a webhook, { channel: ... } for Slack. Values are strings; use \"true\"/\"false\" for booleans such as Opsgenie's euEndpoint. Secret; kept from inputs on refresh.",
           "secret": true
         },
         "enabled": {
           "type": "boolean",
+          "description": "Whether the destination is active. Default true; toggled via the enable/disable endpoints.",
           "default": true
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Display label for the destination."
         },
         "level": {
           "type": "string",
@@ -579,7 +662,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Event types that trigger a notification (uptime, certificate_health, ...). Empty means all."
         },
         "ownerId": {
           "type": "integer",
@@ -598,7 +682,8 @@
       "description": "An Oh Dear recurring maintenance schedule that generates maintenance periods on a cadence.",
       "properties": {
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the schedule was created, as an ISO 8601 timestamp."
         },
         "dayOfMonth": {
           "type": "integer",
@@ -616,31 +701,37 @@
           "description": "End of the window, `HH:MM`."
         },
         "humanReadableSchedule": {
-          "type": "string"
+          "type": "string",
+          "description": "Plain-English rendering of the recurrence."
         },
         "lastGeneratedUntil": {
-          "type": "string"
+          "type": "string",
+          "description": "Date through which concrete maintenance periods have been generated (ISO 8601)."
         },
         "monitorId": {
           "type": "integer",
+          "description": "Monitor this schedule applies to. Accepted only on create; immutable afterwards.",
           "replaceOnChanges": true
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Display name for the recurring schedule."
         },
         "recurrenceType": {
           "type": "string",
           "description": "One of \"daily\", \"weekly\" or \"monthly\"."
         },
         "recurringMaintenancePeriodId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear recurring maintenance period ID."
         },
         "startTime": {
           "type": "string",
           "description": "Start of the window, `HH:MM`."
         },
         "updatedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the schedule was last updated, as an ISO 8601 timestamp."
         }
       },
       "required": [
@@ -673,10 +764,12 @@
         },
         "monitorId": {
           "type": "integer",
+          "description": "Monitor this schedule applies to. Accepted only on create; immutable afterwards.",
           "replaceOnChanges": true
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Display name for the recurring schedule."
         },
         "recurrenceType": {
           "type": "string",
@@ -699,45 +792,57 @@
       "description": "An Oh Dear status page. `monitors` is the full set of monitors shown on the page.",
       "properties": {
         "badgeId": {
-          "type": "string"
+          "type": "string",
+          "description": "ID used to build the status badge image URL."
         },
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the page was created, as an ISO 8601 timestamp."
         },
         "domain": {
-          "type": "string"
+          "type": "string",
+          "description": "Custom domain serving the page, if configured."
         },
         "fullUrl": {
-          "type": "string"
+          "type": "string",
+          "description": "Fully-qualified URL of the status page."
         },
         "monitors": {
           "type": "array",
           "items": {
             "$ref": "#/types/ohdear:index:StatusPageMonitor"
-          }
+          },
+          "description": "Full set of monitors shown on the page; syncing this list replaces the previous set."
         },
         "slug": {
-          "type": "string"
+          "type": "string",
+          "description": "URL slug on the Oh Dear-hosted domain."
         },
         "statusPageId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear status page ID."
         },
         "summarizedStatus": {
-          "type": "string"
+          "type": "string",
+          "description": "Current overall status shown on the page."
         },
         "teamId": {
           "type": "integer",
+          "description": "Team that owns the page. Immutable — no API endpoint edits the page itself, so a change replaces it.",
           "replaceOnChanges": true
         },
         "timezone": {
-          "type": "string"
+          "type": "string",
+          "description": "Timezone the page renders times in."
         },
         "title": {
           "type": "string",
+          "description": "Status page title. Immutable, same reason as teamId.",
           "replaceOnChanges": true
         },
         "updatedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the page was last updated, as an ISO 8601 timestamp."
         }
       },
       "required": [
@@ -759,14 +864,17 @@
           "type": "array",
           "items": {
             "$ref": "#/types/ohdear:index:StatusPageMonitor"
-          }
+          },
+          "description": "Full set of monitors shown on the page; syncing this list replaces the previous set."
         },
         "teamId": {
           "type": "integer",
+          "description": "Team that owns the page. Immutable — no API endpoint edits the page itself, so a change replaces it.",
           "replaceOnChanges": true
         },
         "title": {
           "type": "string",
+          "description": "Status page title. Immutable, same reason as teamId.",
           "replaceOnChanges": true
         }
       },
@@ -780,37 +888,46 @@
       "description": "An Oh Dear tag. The API cannot update or delete tags: changing an input replaces the resource, and destroy only removes it from Pulumi state.",
       "properties": {
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the tag was created, as an ISO 8601 timestamp."
         },
         "monitors": {
           "type": "array",
           "items": {
             "type": "integer"
-          }
+          },
+          "description": "IDs of monitors to attach the tag to."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Tag name."
         },
         "sites": {
           "type": "array",
           "items": {
             "type": "integer"
-          }
+          },
+          "description": "IDs of the sites/monitors currently carrying the tag."
         },
         "slug": {
-          "type": "string"
+          "type": "string",
+          "description": "URL-safe form of the tag name."
         },
         "tagId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear tag ID."
         },
         "teamId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Team that owns the tag."
         },
         "teamName": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the owning team."
         },
         "updatedAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the tag was last updated, as an ISO 8601 timestamp."
         }
       },
       "required": [
@@ -828,13 +945,16 @@
           "type": "array",
           "items": {
             "type": "integer"
-          }
+          },
+          "description": "IDs of monitors to attach the tag to."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Tag name."
         },
         "teamId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Team that owns the tag."
         }
       },
       "requiredInputs": [
@@ -846,25 +966,31 @@
       "description": "An Oh Dear tag group. `tags` holds tag names and supports wildcards such as `prod-*`.",
       "properties": {
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "description": "When the tag group was created, as an ISO 8601 timestamp."
         },
         "groupId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Numeric Oh Dear tag group ID."
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Display label for the group."
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Tag names in the group; wildcards such as prod-* are allowed."
         },
         "teamId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Team that owns the tag group."
         },
         "teamName": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the owning team."
         }
       },
       "required": [
@@ -876,16 +1002,19 @@
       ],
       "inputProperties": {
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Display label for the group."
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Tag names in the group; wildcards such as prod-* are allowed."
         },
         "teamId": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Team that owns the tag group."
         }
       },
       "requiredInputs": [

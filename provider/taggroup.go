@@ -29,6 +29,18 @@ func (g *TagGroup) Annotate(a infer.Annotator) {
 	a.Describe(&g, "An Oh Dear tag group. `tags` holds tag names and supports wildcards such as `prod-*`.")
 }
 
+func (a *TagGroupArgs) Annotate(an infer.Annotator) {
+	an.Describe(&a.TeamID, "Team that owns the tag group.")
+	an.Describe(&a.Label, "Display label for the group.")
+	an.Describe(&a.Tags, "Tag names in the group; wildcards such as prod-* are allowed.")
+}
+
+func (s *TagGroupState) Annotate(an infer.Annotator) {
+	an.Describe(&s.GroupID, "Numeric Oh Dear tag group ID.")
+	an.Describe(&s.TeamName, "Name of the owning team.")
+	an.Describe(&s.CreatedAt, "When the tag group was created, as an ISO 8601 timestamp.")
+}
+
 type tagGroupWire struct {
 	ID        int    `json:"id"`
 	Label     string `json:"label"`

@@ -47,8 +47,22 @@ func (c *CronCheck) Annotate(a infer.Annotator) {
 }
 
 func (a *CronCheckArgs) Annotate(an infer.Annotator) {
+	an.Describe(&a.MonitorID, "Monitor this cron check belongs to. Immutable — the API cannot move a check between monitors.")
+	an.Describe(&a.Name, "Display name for the cron check.")
 	an.Describe(&a.Type, `One of "simple" (uses frequencyInMinutes) or "cron" (uses cronExpression + serverTimezone).`)
+	an.Describe(&a.Description, "Free-form description.")
+	an.Describe(&a.FrequencyInMinutes, `For "simple" checks: how often a ping is expected.`)
 	an.Describe(&a.GraceTimeInMinutes, "How long a ping may be late before the check alerts.")
+	an.Describe(&a.CronExpression, `For "cron" checks: crontab expression for when a ping is expected.`)
+	an.Describe(&a.ServerTimezone, `For "cron" checks: timezone the expression is evaluated in, e.g. Europe/Berlin.`)
+}
+
+func (s *CronCheckState) Annotate(an infer.Annotator) {
+	an.Describe(&s.CronCheckID, "Numeric Oh Dear cron check ID.")
+	an.Describe(&s.UUID, "Stable UUID for the cron check; part of the ping URL.")
+	an.Describe(&s.PingURL, "URL the job must request on each successful run.")
+	an.Describe(&s.HumanReadableCronExpression, "Plain-English rendering of the schedule.")
+	an.Describe(&s.CreatedAt, "When the cron check was created, as an ISO 8601 timestamp.")
 }
 
 type cronCheckWire struct {

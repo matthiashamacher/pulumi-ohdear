@@ -46,11 +46,21 @@ func (r *RecurringMaintenancePeriod) Annotate(a infer.Annotator) {
 }
 
 func (a *RecurringMaintenancePeriodArgs) Annotate(an infer.Annotator) {
+	an.Describe(&a.MonitorID, "Monitor this schedule applies to. Accepted only on create; immutable afterwards.")
+	an.Describe(&a.Name, "Display name for the recurring schedule.")
 	an.Describe(&a.RecurrenceType, `One of "daily", "weekly" or "monthly".`)
 	an.Describe(&a.StartTime, "Start of the window, `HH:MM`.")
 	an.Describe(&a.EndTime, "End of the window, `HH:MM`.")
 	an.Describe(&a.DaysOfWeek, "Days for a weekly schedule, 0 (Sunday) to 6 (Saturday).")
 	an.Describe(&a.DayOfMonth, "Day for a monthly schedule, 1 to 31.")
+}
+
+func (s *RecurringMaintenancePeriodState) Annotate(an infer.Annotator) {
+	an.Describe(&s.RecurringMaintenancePeriodID, "Numeric Oh Dear recurring maintenance period ID.")
+	an.Describe(&s.HumanReadableSchedule, "Plain-English rendering of the recurrence.")
+	an.Describe(&s.LastGeneratedUntil, "Date through which concrete maintenance periods have been generated (ISO 8601).")
+	an.Describe(&s.CreatedAt, "When the schedule was created, as an ISO 8601 timestamp.")
+	an.Describe(&s.UpdatedAt, "When the schedule was last updated, as an ISO 8601 timestamp.")
 }
 
 type recurringWire struct {

@@ -38,6 +38,21 @@ func (t *Tag) Annotate(a infer.Annotator) {
 		"replaces the resource, and destroy only removes it from Pulumi state.")
 }
 
+func (a *TagArgs) Annotate(an infer.Annotator) {
+	an.Describe(&a.TeamID, "Team that owns the tag.")
+	an.Describe(&a.Name, "Tag name.")
+	an.Describe(&a.Monitors, "IDs of monitors to attach the tag to.")
+}
+
+func (s *TagState) Annotate(an infer.Annotator) {
+	an.Describe(&s.TagID, "Numeric Oh Dear tag ID.")
+	an.Describe(&s.Slug, "URL-safe form of the tag name.")
+	an.Describe(&s.TeamName, "Name of the owning team.")
+	an.Describe(&s.Sites, "IDs of the sites/monitors currently carrying the tag.")
+	an.Describe(&s.CreatedAt, "When the tag was created, as an ISO 8601 timestamp.")
+	an.Describe(&s.UpdatedAt, "When the tag was last updated, as an ISO 8601 timestamp.")
+}
+
 type tagWire struct {
 	ID        int    `json:"id"`
 	TeamID    int    `json:"team_id"`
