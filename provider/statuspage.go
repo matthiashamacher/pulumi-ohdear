@@ -78,10 +78,7 @@ type statusPageWire struct {
 	BadgeID          string `json:"badge_id"`
 	CreatedAt        string `json:"created_at"`
 	UpdatedAt        string `json:"updated_at"`
-	Team             struct {
-		ID int `json:"id"`
-	} `json:"team"`
-	Monitors []struct {
+	Monitors         []struct {
 		ID int `json:"id"`
 	} `json:"monitors"`
 }
@@ -90,8 +87,11 @@ type statusPageWire struct {
 // present: the API echoes full monitor objects, not the {id, clickable} pairs
 // we send, so inputs are the only source of `clickable`. On import, inputs are
 // empty, so fall back to the IDs the API reports (clickable defaults false).
+//
+// teamId has no server-owned source: the API response carries no `team` field
+// at all, so it's left untouched here and only ever comes from the caller's
+// recorded inputs.
 func (w statusPageWire) toState(inputs StatusPageArgs) StatusPageState {
-	inputs.TeamID = w.Team.ID
 	inputs.Title = w.Title
 	if len(inputs.Monitors) == 0 {
 		for _, wm := range w.Monitors {
