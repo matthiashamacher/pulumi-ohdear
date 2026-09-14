@@ -89,8 +89,8 @@ type statusPageWire struct {
 // empty, so fall back to the IDs the API reports (clickable defaults false).
 //
 // teamId has no server-owned source: the API response carries no `team` field
-// at all, so it's left untouched here and only ever comes from the caller's
-// recorded inputs.
+// at all, so it's left untouched here. On import (no recorded inputs), Read
+// derives it from one of the page's monitors before calling toState.
 func (w statusPageWire) toState(inputs StatusPageArgs) StatusPageState {
 	inputs.Title = w.Title
 	if len(inputs.Monitors) == 0 {
@@ -145,15 +145,26 @@ func (StatusPage) Create(ctx context.Context, req infer.CreateRequest[StatusPage
 }
 
 func (StatusPage) Read(ctx context.Context, req infer.ReadRequest[StatusPageArgs, StatusPageState]) (infer.ReadResponse[StatusPageArgs, StatusPageState], error) {
+	c := infer.GetConfig[Config](ctx).client
 	var out statusPageWire
-	err := infer.GetConfig[Config](ctx).client.Do(ctx, http.MethodGet, "/status-pages/"+req.ID, nil, &out)
+	err := c.Do(ctx, http.MethodGet, "/status-pages/"+req.ID, nil, &out)
 	if err != nil {
 		if apiStatus(err) == http.StatusNotFound {
 			return infer.ReadResponse[StatusPageArgs, StatusPageState]{}, nil
 		}
 		return infer.ReadResponse[StatusPageArgs, StatusPageState]{}, err
 	}
-	st := out.toState(req.Inputs)
+
+	inputs := req.Inputs
+	if inputs.TeamID == 0 && len(out.Monitors) > 0 {
+		var mon monitorWire
+		if err := c.Do(ctx, http.MethodGet, "/monitors/"+strconv.Itoa(out.Monitors[0].ID), nil, &mon); err != nil {
+			return infer.ReadResponse[StatusPageArgs, StatusPageState]{}, err
+		}
+		inputs.TeamID = mon.TeamID
+	}
+
+	st := out.toState(inputs)
 	return infer.ReadResponse[StatusPageArgs, StatusPageState]{ID: req.ID, Inputs: st.StatusPageArgs, State: st}, nil
 }
 
