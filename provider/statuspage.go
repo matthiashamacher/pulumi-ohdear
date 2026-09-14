@@ -81,13 +81,23 @@ type statusPageWire struct {
 	Team             struct {
 		ID int `json:"id"`
 	} `json:"team"`
+	Monitors []struct {
+		ID int `json:"id"`
+	} `json:"monitors"`
 }
 
-// toState refreshes server-owned fields. `monitors` is kept from inputs: the API
-// echoes full monitor objects, not the {id, clickable} pairs we send.
+// toState refreshes server-owned fields. `monitors` is kept from inputs when
+// present: the API echoes full monitor objects, not the {id, clickable} pairs
+// we send, so inputs are the only source of `clickable`. On import, inputs are
+// empty, so fall back to the IDs the API reports (clickable defaults false).
 func (w statusPageWire) toState(inputs StatusPageArgs) StatusPageState {
 	inputs.TeamID = w.Team.ID
 	inputs.Title = w.Title
+	if len(inputs.Monitors) == 0 {
+		for _, wm := range w.Monitors {
+			inputs.Monitors = append(inputs.Monitors, StatusPageMonitor{ID: wm.ID})
+		}
+	}
 	return StatusPageState{
 		StatusPageArgs:   inputs,
 		StatusPageID:     w.ID,
