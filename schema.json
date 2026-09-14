@@ -936,7 +936,6 @@
         "tagId",
         "slug",
         "teamName",
-        "sites",
         "createdAt",
         "updatedAt"
       ],
