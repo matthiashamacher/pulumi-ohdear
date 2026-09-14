@@ -28,7 +28,7 @@ type TagState struct {
 	TagID     int    `pulumi:"tagId"`
 	Slug      string `pulumi:"slug"`
 	TeamName  string `pulumi:"teamName"`
-	Sites     []int  `pulumi:"sites"`
+	Sites     []int  `pulumi:"sites,optional"`
 	CreatedAt string `pulumi:"createdAt"`
 	UpdatedAt string `pulumi:"updatedAt"`
 }
