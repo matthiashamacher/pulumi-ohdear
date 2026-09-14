@@ -118,3 +118,46 @@ func (Tag) Delete(ctx context.Context, req infer.DeleteRequest[TagState]) (infer
 		req.State.Name, req.ID)
 	return infer.DeleteResponse{}, nil
 }
+
+// Diff compares only teamId, name and monitors: the inputs that actually require a replace,
+// since the API has no update endpoint for any of them. The default reflection-based diff
+// walks the full state (including output-only fields like createdAt/slug/tagId) and, with no
+// Update method, infer forces a replace on *any* detected difference — so drift in those
+// output fields across provider versions (e.g. state encoding changes) manufactures phantom
+// replaces. Comparing just the meaningful inputs avoids that.
+func (Tag) Diff(ctx context.Context, req infer.DiffRequest[TagArgs, TagState]) (infer.DiffResponse, error) {
+	diff := map[string]p.PropertyDiff{}
+	if req.State.TeamID != req.Inputs.TeamID {
+		diff["teamId"] = p.PropertyDiff{Kind: p.UpdateReplace}
+	}
+	if req.State.Name != req.Inputs.Name {
+		diff["name"] = p.PropertyDiff{Kind: p.UpdateReplace}
+	}
+	if !sameIntSet(req.State.Monitors, req.Inputs.Monitors) {
+		diff["monitors"] = p.PropertyDiff{Kind: p.UpdateReplace}
+	}
+	return infer.DiffResponse{
+		HasChanges:   len(diff) > 0,
+		DetailedDiff: diff,
+	}, nil
+}
+
+// sameIntSet reports whether a and b contain the same ints, ignoring order.
+func sameIntSet(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	counts := make(map[int]int, len(a))
+	for _, v := range a {
+		counts[v]++
+	}
+	for _, v := range b {
+		counts[v]--
+	}
+	for _, c := range counts {
+		if c != 0 {
+			return false
+		}
+	}
+	return true
+}
