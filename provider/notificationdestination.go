@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
@@ -148,8 +149,28 @@ func (NotificationDestination) Create(ctx context.Context, req infer.CreateReque
 	return infer.CreateResponse[NotificationDestinationState]{ID: strconv.Itoa(out.ID), Output: in.toState(out)}, nil
 }
 
+// `pulumi import` calls Read with empty Inputs, so level/ownerId aren't known
+// yet. For that case the import ID must carry them: "level:ownerId:id".
 func (NotificationDestination) Read(ctx context.Context, req infer.ReadRequest[NotificationDestinationArgs, NotificationDestinationState]) (infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState], error) {
-	routes, err := ndRoutesFor(req.Inputs.Level, req.Inputs.OwnerID)
+	in := req.Inputs
+	resID := req.ID
+	if in.Level == "" {
+		parts := strings.Split(req.ID, ":")
+		if len(parts) != 3 {
+			return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{}, fmt.Errorf(
+				`import id %q must be "level:ownerId:id" (e.g. "team:33305:12345")`, req.ID)
+		}
+		ownerID, err := strconv.Atoi(parts[1])
+		if err != nil {
+			return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{}, fmt.Errorf("invalid ownerId %q: %w", parts[1], err)
+		}
+		in.Level, in.OwnerID, resID = parts[0], ownerID, parts[2]
+		// No prior inputs to keep destination secrets from; the API masks
+		// them on read, so seed an empty map and let the user fill it in.
+		in.Destination = map[string]string{}
+	}
+
+	routes, err := ndRoutesFor(in.Level, in.OwnerID)
 	if err != nil {
 		return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{}, err
 	}
@@ -157,13 +178,13 @@ func (NotificationDestination) Read(ctx context.Context, req infer.ReadRequest[N
 	if err != nil {
 		return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{}, err
 	}
-	id, _ := strconv.Atoi(req.ID)
+	id, _ := strconv.Atoi(resID)
 	for _, w := range list {
 		if w.ID != id {
 			continue
 		}
-		st := req.Inputs.toState(w)
-		return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{ID: req.ID, Inputs: st.NotificationDestinationArgs, State: st}, nil
+		st := in.toState(w)
+		return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{ID: resID, Inputs: st.NotificationDestinationArgs, State: st}, nil
 	}
 	return infer.ReadResponse[NotificationDestinationArgs, NotificationDestinationState]{}, nil
 }
